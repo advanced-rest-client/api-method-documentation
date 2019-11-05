@@ -39,7 +39,7 @@
     "@api-components/api-headers-document": "^4.0.1",
     "@api-components/api-parameters-document": "^4.0.1",
     "@api-components/api-responses-document": "^4.0.0",
-    "@api-components/api-security-documentation": "^4.0.0",
+    "@api-components/api-security-documentation": "git://github.com/advanced-rest-client/api-security-documentation#embed-css-style",
     "@api-components/http-method-label": "^3.0.1",
     "@api-components/raml-aware": "^3.0.0",
     "@polymer/iron-collapse": "^3.0.0",
