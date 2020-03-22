@@ -32,7 +32,7 @@
     "@advanced-rest-client/http-code-snippets": "^3.1.2",
     "@advanced-rest-client/markdown-styles": "^3.1.1",
     "@anypoint-web-components/anypoint-button": "^1.0.15",
-    "@api-components/amf-helper-mixin": "^4.0.21",
+    "@api-components/amf-helper-mixin": "^4.0.23",
     "@api-components/api-annotation-document": "^4.0.3",
     "@api-components/api-body-document": "^4.0.7",
     "@api-components/api-example-generator": "^4.1.0",
