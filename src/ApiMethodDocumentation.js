@@ -418,6 +418,11 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     return this.__exampleGenerator;
   }
 
+  constructor() {
+    super();
+    this.callbacksOpened = false;
+  }
+
   __amfChanged() {
     if (this.__amfProcessingDebouncer) {
       return;
@@ -796,9 +801,9 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       ${this._getParametersTemplate()}
       ${this._getHeadersTemplate()}
       ${this._getBodyTemplate()}
+      ${this._callbacksTemplate()}
     </section>
     ${this._getReturnsTemplate()}
-    ${this._callbacksTemplate()}
     ${this._getNavigationTemplate()}`;
   }
 
