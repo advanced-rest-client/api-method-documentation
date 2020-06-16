@@ -312,6 +312,42 @@ describe('<api-method-documentation>', function() {
     });
   });
 
+  describe('set server', () => {
+    let element;
+    let callGetBaseUri = false;
+    let _getBaseUriMock;
+
+    beforeEach(async () => {
+      element = await basicFixture();
+      _getBaseUriMock = () => {
+        callGetBaseUri = true;
+      };
+    });
+
+    it('sets new value for server and recalculates baseUri', () => {
+      element._getBaseUri = _getBaseUriMock;
+      assert.isUndefined(element.server);
+
+      element.server = 'test';
+      assert.equal(element.server, 'test');
+      assert.isTrue(callGetBaseUri);
+    });
+
+    it('does not set same value for server nor recalculates baseUri', () => {
+      element._getBaseUri = _getBaseUriMock;
+      assert.isUndefined(element.server);
+
+      element.server = 'test';
+      assert.equal(element.server, 'test');
+      assert.isTrue(callGetBaseUri);
+
+      callGetBaseUri = false;
+      element.server = 'test';
+      assert.equal(element.server, 'test');
+      assert.isFalse(callGetBaseUri);
+    });
+  });
+
   [
     ['Compact model', true],
     ['Full model', false]
@@ -520,13 +556,13 @@ describe('<api-method-documentation>', function() {
         it('sets URL from base uri', async () => {
           const element = await baseUriFixture(amf, endpoint, method);
           await aTimeout();
-          assert.equal(element.endpointUri, 'https://domain.com/people/{personId}');
+          assert.equal(element.endpointUri, 'http://{instance}.domain.com/v1/people/{personId}');
         });
 
         it('sets URL from base uri', async () => {
           const element = await baseUriFixture(amf, endpoint, method);
           await aTimeout();
-          assert.equal(element.endpointUri, 'https://domain.com/people/{personId}');
+          assert.equal(element.endpointUri, 'http://{instance}.domain.com/v1/people/{personId}');
         });
       });
 

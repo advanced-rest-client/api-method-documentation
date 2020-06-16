@@ -397,6 +397,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       return;
     }
     this._server = value;
+    this.baseUri = this._getBaseUri(undefined, value);
+
     this.requestUpdate('server', old);
     this._processServerInfo();
   }
@@ -409,10 +411,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     if (!methodName || !httpMethod) {
       return true;
     }
-    if (methodName.toLowerCase() === httpMethod.toLowerCase()) {
-      return true;
-    }
-    return false;
+
+    return methodName.toLowerCase() === httpMethod.toLowerCase();
   }
 
   constructor() {
