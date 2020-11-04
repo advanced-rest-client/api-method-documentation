@@ -304,6 +304,14 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
        * When set the base URI won't be rendered for this method.
        */
       ignoreBaseUri: { type: Boolean },
+      /**
+       * Optional protocol for the current method
+       */
+      protocol: { type: String },
+      /**
+       * Optional version for the protocol for the current method
+       */
+      protocolVersion: { type: String },
     };
   }
 
@@ -504,6 +512,11 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       this._computeHasPathParameters(serverVariables, this.endpointVariables);
     this.hasParameters = hasPathParameters || this._hasQueryParameters();
     this._processEndpointVariables();
+    this.protocol = this._getValue(this.server, this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocol));
+    this.protocolVersion = this._getValue(
+      this.server, 
+      this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocolVersion)
+      );
   }
 
   /**
