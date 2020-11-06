@@ -789,7 +789,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       .scope="${aware}"
       @api-changed="${this._apiChanged}"></raml-aware>` : ''}
     ${this._getTitleTemplate()}
-    ${this._getSummaryTemplate()}
     ${this._getUrlTemplate()}
     ${this._getTraitsTemplate()}
     ${hasCustomProperties ? html`<api-annotation-document .shape="${method}"></api-annotation-document>` : ''}
@@ -830,10 +829,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     ${methodSummary ? html`<p class="summary">${methodSummary}</p>` : ''}
     ${operationId ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
     `;
-  }
-
-  _getSummaryTemplate() {
-
   }
 
   _getUrlTemplate() {
