@@ -466,6 +466,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     const extendsTypes = this.extendsTypes = this._computeExtends(method);
     this.traits = this._computeTraits(extendsTypes);
     this.methodSummary = this._getValue(method, this.ns.aml.vocabularies.apiContract.guiSummary);
+    this.operationId = this._getValue(method, this.ns.aml.vocabularies.apiContract.operationId);
     this.callbacks = this._computeCallbacks(method);
   }
 
@@ -788,6 +789,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       .scope="${aware}"
       @api-changed="${this._apiChanged}"></raml-aware>` : ''}
     ${this._getTitleTemplate()}
+    ${this._getSummaryTemplate()}
     ${this._getUrlTemplate()}
     ${this._getTraitsTemplate()}
     ${hasCustomProperties ? html`<api-annotation-document .shape="${method}"></api-annotation-document>` : ''}
@@ -812,7 +814,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       methodName,
       noTryIt,
       compatibility,
-      methodSummary
+      methodSummary,
+      operationId,
     } = this;
     return html`
     <div class="title-area">
@@ -826,7 +829,12 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       </div>`}
     </div>
     ${methodSummary ? html`<p class="summary">${methodSummary}</p>` : ''}
+    ${operationId ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
     `;
+  }
+
+  _getSummaryTemplate() {
+
   }
 
   _getUrlTemplate() {

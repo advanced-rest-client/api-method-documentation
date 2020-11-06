@@ -2,7 +2,7 @@ import { fixture, assert, nextFrame, html } from '@open-wc/testing';
 import { AmfLoader } from './amf-loader.js';
 import '../api-url.js';
 
-describe.only('<api-url>', function () {
+describe('<api-url>', function () {
   async function basicFixture() {
 	return fixture(`<api-url></api-url>`);
   }

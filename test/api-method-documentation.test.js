@@ -779,6 +779,12 @@ describe('<api-method-documentation>', function() {
           assert.isTrue(node.noNavigation, 'nonavigation is set');
           assert.isTrue(node.ignoreBaseUri, 'ignorebaseuri is set');
         });
+
+        it('should render operationId', () => {
+          const operationIdNode = element.shadowRoot.querySelector('.operation-id');
+          assert.exists(operationIdNode);
+          assert.equal(operationIdNode.textContent, 'Operation ID: subscribeOperation');
+        });
       });
     
       describe('Non-http protocols', () => {
