@@ -828,7 +828,12 @@ describe('<api-method-documentation>', function() {
 
         it('should set endpoint uri with amqp protocol', () => {
           assert.equal(element.endpointUri, 'amqp://broker.mycompany.com');
-        })
+        });
+
+        it('_showTryIt() should return false', () => {
+          element.noTryIt = false;
+          assert.isFalse(element._showTryIt());
+        });
       })
     });
   });
