@@ -62,3 +62,7 @@ AmfLoader.lookupEndpointOperation = function(model, endpoint, operation) {
   const op = ops.find((item) => helper._getValue(item, helper.ns.aml.vocabularies.apiContract.method) === operation);
   return [endPoint, op];
 };
+
+AmfLoader.getEncodes = function(model) {
+  return helper._computeEncodes(model)
+}

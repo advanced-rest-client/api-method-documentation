@@ -16,6 +16,7 @@ import '@advanced-rest-client/http-code-snippets/http-code-snippets.js';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@polymer/iron-collapse/iron-collapse.js';
 import '@api-components/api-security-documentation/api-security-documentation.js';
+import '../api-url.js'
 import { ExampleGenerator } from '@api-components/api-example-generator';
 import styles from './Styles.js';
 /**
@@ -308,10 +309,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
        * Optional protocol for the current method
        */
       protocol: { type: String },
-      /**
-       * Optional version for the protocol for the current method
-       */
-      protocolVersion: { type: String },
     };
   }
 
@@ -461,7 +458,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.__methodProcessingDebouncer = false;
     const { method } = this;
     this.methodName = this._computeMethodName(method);
-    this.httpMethod = this._computeHttpMethod(method);
     this.description = this._computeDescription(method);
     this.hasCustomProperties = this._computeHasCustomProperties(method);
     this.expects = this._computeExpects(method);
@@ -506,26 +502,11 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
    * Updates value for endpoint URI, server and path variables.
    */
   _processServerInfo() {
-    this.endpointUri = this._computeEndpointUri();
     const serverVariables = this.serverVariables = this._computeServerVariables(this.server);
     const hasPathParameters = this.hasPathParameters =
       this._computeHasPathParameters(serverVariables, this.endpointVariables);
     this.hasParameters = hasPathParameters || this._hasQueryParameters();
     this._processEndpointVariables();
-    this.protocol = this._getValue(this.server, this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocol));
-    this.protocolVersion = this._getValue(
-      this.server, 
-      this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocolVersion)
-      );
-  }
-
-  /**
-   * Computes value of endpoint URI.
-   * @return {String}
-   */
-  _computeEndpointUri() {
-    const { server, baseUri, apiVersion: version, endpoint } = this;
-    return this._computeUri(endpoint, { server, baseUri, version });
   }
 
   /**
@@ -566,19 +547,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     let name = this._getValue(method, this.ns.aml.vocabularies.core.name);
     if (!name) {
       name = this._getValue(method, this.ns.aml.vocabularies.apiContract.method);
-    }
-    return name;
-  }
-  /**
-   * Computes value for `httpMethod` property.
-   *
-   * @param {Object} method AMF `supportedOperation` model
-   * @return {String|undefined} HTTP method name
-   */
-  _computeHttpMethod(method) {
-    let name = this._getValue(method, this.ns.aml.vocabularies.apiContract.method);
-    if (name) {
-      name = name.toUpperCase();
     }
     return name;
   }
@@ -862,12 +830,17 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _getUrlTemplate() {
-    const { httpMethod, endpointUri } = this;
-    return html`<section class="url-area">
-      <div class="method-value"><span class="method-label" data-method="${httpMethod}">${httpMethod}</span></div>
-      <div class="url-value">${endpointUri}</div>
-    </section>
-    <clipboard-copy id="urlCopy" .content="${endpointUri}"></clipboard-copy>`;
+    return html`
+    <api-url
+      .amf="${this.amf}"
+      .server="${this.server}"
+      .endpoint="${this.endpoint}"
+      .apiVersion="${this.apiVersion}"
+      .baseUri="${this.baseUri}"
+      .operation="${this.method}"
+      @onchange="${this._handleUrlChange}"
+    >
+    </api-url>`;
   }
 
   _getTraitsTemplate() {
@@ -895,6 +868,9 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   _getCodeSnippetsTemplate() {
     if (!this.renderCodeSnippets) {
+      return '';
+    }
+    if (this.isNonHttpProtocol()) {
       return '';
     }
     const {
@@ -1122,6 +1098,21 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
         ></api-method-documentation>
       </div>
     `;
+  }
+
+  _handleUrlChange(event) {
+    this.endpointUri = event.detail.url;
+    this.protocol = event.detail.protocol;
+    this.httpMethod = event.detail.method;
+  }
+
+  isNonHttpProtocol() {
+    const { protocol } = this;
+    if (!protocol) {
+      return false;
+    }
+    const lowerCase = protocol.toLowerCase();
+    return lowerCase !== 'http' && lowerCase !== 'https';
   }
 
   _getNavigationTemplate() {

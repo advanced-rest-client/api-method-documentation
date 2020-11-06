@@ -320,6 +320,7 @@ describe('<api-method-documentation>', function() {
       const demoApi = 'demo-api';
       const driveApi = 'google-drive-api';
       const callbacksApi = 'oas-callbacks';
+      const asyncApi = 'async-api';
 
       describe('Basic AMF computations', () => {
         let amf;
@@ -779,6 +780,26 @@ describe('<api-method-documentation>', function() {
           assert.isTrue(node.ignoreBaseUri, 'ignorebaseuri is set');
         });
       });
+    
+      describe('Non-http protocols', () => {
+        let amf;
+        let element;
+
+        before(async () => {
+          amf = await AmfLoader.load(asyncApi, compact);
+        });
+
+        beforeEach(async () => {
+          const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, 'hello', 'publish');
+          element = await modelFixture(amf, endpoint, method);
+          // model change debouncer
+          await aTimeout(0);
+        });
+
+        it('should set endpoint uri with amqp protocol', () => {
+          assert.equal(element.endpointUri, 'amqp://broker.mycompany.com');
+        })
+      })
     });
   });
 });
