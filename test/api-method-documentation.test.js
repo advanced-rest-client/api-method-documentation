@@ -830,9 +830,9 @@ describe('<api-method-documentation>', function() {
           assert.equal(element.endpointUri, 'amqp://broker.mycompany.com');
         });
 
-        it('_showTryIt() should return false', () => {
+        it('isNonHttpProtocol() should return true', () => {
           element.noTryIt = false;
-          assert.isFalse(element._showTryIt());
+          assert.isTrue(element.isNonHttpProtocol());
         });
       })
     });
