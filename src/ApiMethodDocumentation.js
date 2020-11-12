@@ -407,7 +407,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   get _titleHidden() {
-    if (!this.noTryIt()) {
+    if (!this.noTryIt) {
       return false;
     }
     const { methodName, httpMethod } = this;
