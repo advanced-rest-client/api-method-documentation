@@ -407,7 +407,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   get _titleHidden() {
-    if (this._showTryIt()) {
+    if (!this.noTryIt()) {
       return false;
     }
     const { methodName, httpMethod } = this;
@@ -811,6 +811,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     }
     const {
       methodName,
+      noTryIt,
       compatibility,
       methodSummary,
       operationId,
@@ -818,7 +819,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     return html`
     <div class="title-area">
       <div role="heading" aria-level="1" class="title">${methodName}</div>
-      ${!this._showTryIt() ? '' : html`<div class="action">
+      ${noTryIt ? '' : html`<div class="action">
         <anypoint-button
           class="action-button"
           @click="${this._tryIt}"
@@ -1140,12 +1141,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     </section>`;
   }
 
-  _showTryIt() {
-    if (this.noTryIt) {
-      return false;
-    }
-    return !this.isNonHttpProtocol();
-  }
   /**
    * Dispatched when the user requested the "Try it" view.
    * @event tryit-requested
