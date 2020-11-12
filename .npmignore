@@ -6,7 +6,6 @@ CONTRIBUTING.md
 .travis.yml
 index.html
 polymer.json
-karma.*
 husky.*
 commitlint.*
 .*
