@@ -27,118 +27,136 @@ import styles from './Styles.js';
  *  - Protocol
  *  - URL
  *  - Operation name
+ * @fires change
  */
 export class ApiUrl extends AmfHelperMixin(LitElement) {
   static get properties() {
-	return {
-	  server: { type: Object },
-	  endpoint: { type: Object },
-	  operation: { type: Object },
-	  apiVersion: { type: String },
-	  baseUri: { type: String },
-	  _url: { type: String },
-	  _method: { type: String },
-	  _protocol: { type: String },
-	  _protocolVersion: { type: String },
-	  _operation: { type: Object },
-	  _server: { type: Object }
-	};
+    return {
+      /**
+       * AMF model for Server object
+       */
+      server: { type: Object },
+      /**
+       * AMF model for Endpoint object
+       */
+      endpoint: { type: Object },
+      /**
+       * AMF model for Operation object
+       */
+      operation: { type: Object },
+      /**
+       * Optional parameter to be injected into the URL
+       */
+      apiVersion: { type: String },
+      /**
+       * Optional override of the URL. If this property is set, then that will
+       * be the base URI regardless of server and endpoint
+       * @attribute
+       */
+      baseUri: { type: String },
+      _url: { type: String },
+      _method: { type: String },
+      _protocol: { type: String },
+      _protocolVersion: { type: String },
+      _operation: { type: Object },
+      _server: { type: Object }
+    };
   }
 
   get styles() {
-	return [markdownStyles, httpMethodStyles, styles];
+    return [markdownStyles, httpMethodStyles, styles];
   }
 
   get isNotHttp() {
-	const { server } = this;
-	if (server) {
-	  const key = this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocol);
-	  const protocol = this._getValue(server, key);
-	  if (!protocol) {
-		return false;
-	  }
-	  return protocol.toLowerCase() !== 'http' && protocol.toLowerCase() !== 'https';
-	}
-	return false;
+    const { server } = this;
+    if (server) {
+      const key = this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocol);
+      const protocol = this._getValue(server, key);
+      if (!protocol) {
+        return false;
+      }
+      return protocol.toLowerCase() !== 'http' && protocol.toLowerCase() !== 'https';
+    }
+    return false;
   }
 
   get operation() {
-	return this._operation;
+    return this._operation;
   }
 
   set operation(value) {
-	const old = this._operation;
-	if (old === value) {
-	  return;
-	}
-	this._operation = value;
-	this.requestUpdate('operation', old);
-	this._updateMethod();
-	this._updateUrl();
+    const old = this._operation;
+    if (old === value) {
+      return;
+    }
+    this._operation = value;
+    this.requestUpdate('operation', old);
+    this._updateMethod();
+    this._updateUrl();
   }
 
   get server() {
-	return this._server;
+    return this._server;
   }
 
   set server(value) {
-	const old = this._server;
-	if (old === value) {
-	  return;
-	}
-	this._server = value;
-	this.requestUpdate('server', old);
-	this._updateProtocol();
-	this._updateProtocolVersion();
-	this._updateUrl();
+    const old = this._server;
+    if (old === value) {
+      return;
+    }
+    this._server = value;
+    this.requestUpdate('server', old);
+    this._updateProtocol();
+    this._updateProtocolVersion();
+    this._updateUrl();
   }
 
   get endpoint() {
-	return this._endpoint;
+    return this._endpoint;
   }
 
   set endpoint(value) {
-	const old = this._endpoint;
-	if (old === value) {
-	  return;
-	}
-	this._endpoint = value;
-	this.requestUpdate('endpoint', old);
-	this._updateUrl();
+    const old = this._endpoint;
+    if (old === value) {
+      return;
+    }
+    this._endpoint = value;
+    this.requestUpdate('endpoint', old);
+    this._updateUrl();
   }
 
   get apiVersion() {
-	return this._apiVersion;
+    return this._apiVersion;
   }
 
   set apiVersion(value) {
-	const old = this._apiVersion;
-	if (old === value) {
-	  return;
-	}
-	this._apiVersion = value;
-	this.requestUpdate('apiVersion', old);
-	this._updateUrl();
+    const old = this._apiVersion;
+    if (old === value) {
+      return;
+    }
+    this._apiVersion = value;
+    this.requestUpdate('apiVersion', old);
+    this._updateUrl();
   }
 
   get path() {
-	if (this.endpoint) {
-	  return this._getValue(this.endpoint, this._getAmfKey(this.ns.aml.vocabularies.apiContract.path));
-	}
-	return '';
+    if (this.endpoint) {
+      return this._getValue(this.endpoint, this._getAmfKey(this.ns.aml.vocabularies.apiContract.path));
+    }
+    return '';
   }
 
   get url() {
-	if (this.baseUri) {
-	  return this.baseUri;
-	}
-	return this._url;
+    if (this.baseUri) {
+      return this.baseUri;
+    }
+    return this._url;
   }
 
   render() {
-	const method = this._method;
-	const url = this.url;
-	return html`
+    const method = this._method;
+    const url = this.url;
+    return html`
       <style>
         ${this.styles}
       </style>
@@ -152,42 +170,42 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   _getPathTemplate() {
-	if (this.isNotHttp) {
-	  return html`
+    if (this.isNotHttp) {
+      return html`
         ${this.path}
       `;
-	}
-	return undefined;
+    }
+    return undefined;
   }
 
   _updateMethod() {
-	this._method = this._computeMethod(this._operation);
-	this._dispatchChangeEvent();
+    this._method = this._computeMethod(this._operation);
+    this._dispatchChangeEvent();
   }
 
   _updateProtocol() {
-	const key = this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocol);
-	this._protocol = this._getValue(this._server, key);
-	this._dispatchChangeEvent();
+    const key = this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocol);
+    this._protocol = this._getValue(this._server, key);
+    this._dispatchChangeEvent();
   }
 
   _updateProtocolVersion() {
-	const key = this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocolVersion);
-	this._protocolVersion = this._getValue(this._server, key);
+    const key = this._getAmfKey(this.ns.aml.vocabularies.apiContract.protocolVersion);
+    this._protocolVersion = this._getValue(this._server, key);
   }
 
   _updateUrl() {
-	const { _server, baseUri, apiVersion: version, _endpoint, _protocol } = this;
-	const options = { baseUri, version };
-	options.server = _server;
-	if (this.isNotHttp) {
-	  options.ignorePath = true;
-	}
-	if (_protocol) {
-	  options.protocols = [_protocol];
-	}
-	this._url = this._computeUri(_endpoint, options) + this._computeMethodParametersUri(this.operation);
-	this._dispatchChangeEvent();
+    const { _server, baseUri, apiVersion: version, _endpoint, _protocol } = this;
+    const options = { baseUri, version };
+    options.server = _server;
+    if (this.isNotHttp) {
+      options.ignorePath = true;
+    }
+    if (_protocol) {
+      options.protocols = [_protocol];
+    }
+    this._url = this._computeUri(_endpoint, options) + this._computeMethodParametersUri(this.operation);
+    this._dispatchChangeEvent();
   }
 
   /**
@@ -197,72 +215,74 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
    * @return {String|undefined} HTTP method name
    */
   _computeMethod(operation) {
-	const methodKey = this.ns.aml.vocabularies.apiContract.method;
-	let name = this._getValue(operation, methodKey);
-	if (name) {
-	  name = name.toUpperCase();
-	}
-	return name;
+    const methodKey = this.ns.aml.vocabularies.apiContract.method;
+    let name = this._getValue(operation, methodKey);
+    if (name) {
+      name = name.toUpperCase();
+    }
+    return name;
   }
 
   _dispatchChangeEvent() {
-	this.dispatchEvent(new CustomEvent('onchange', {
-	  bubbles: true,
-	  composed: true,
-	  detail: {
-		url: this._url,
-		protocol: this._protocol,
-		method: this._method
-	  }
-	}));
+    this.dispatchEvent(
+      new CustomEvent('onchange', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          url: this._url,
+          protocol: this._protocol,
+          method: this._method
+        }
+      })
+    );
   }
 
   _computeMethodParametersUri(method) {
-	let queryParams = '';
-	if (!method) {
-	  return queryParams
-	}
+    let queryParams = '';
+    if (!method) {
+      return queryParams;
+    }
 
-	const expects = this._computeExpects(method);
-	const params = this._computeQueryParameters(expects);
-	if (params && Array.isArray(params)) {
-	  params.forEach(param => {
-		const paramExample = this._computeMethodParameterUri(param);
-		if (paramExample) {
-		  if (paramExample.example) {
-			queryParams += `${queryParams ? '&' : '?'}${paramExample.name}=${paramExample.example}`
-		  } else {
-			const examples = paramExample.examples.map(e => `${paramExample.name}=${e}`).join('&')
-			queryParams += `${queryParams ? '&' : '?'}${examples}`
-		  }
-		}
-	  });
-	}
-	return queryParams
+    const expects = this._computeExpects(method);
+    const params = this._computeQueryParameters(expects);
+    if (params && Array.isArray(params)) {
+      params.forEach((param) => {
+        const paramExample = this._computeMethodParameterUri(param);
+        if (paramExample) {
+          if (paramExample.example) {
+            queryParams += `${queryParams ? '&' : '?'}${paramExample.name}=${paramExample.example}`;
+          } else {
+            const examples = paramExample.examples.map((e) => `${paramExample.name}=${e}`).join('&');
+            queryParams += `${queryParams ? '&' : '?'}${examples}`;
+          }
+        }
+      });
+    }
+    return queryParams;
   }
 
   _computeMethodParameterUri(param) {
-	if (!this._getValue(param, this.ns.aml.vocabularies.apiContract.required)) {
-	  return
-	}
+    if (!this._getValue(param, this.ns.aml.vocabularies.apiContract.required)) {
+      return;
+    }
 
-	const paramName = this._getValue(param, this.ns.aml.vocabularies.apiContract.paramName);
-	const paramExample = this._computePropertyValue(param);
+    const paramName = this._getValue(param, this.ns.aml.vocabularies.apiContract.paramName);
+    const paramExample = this._computePropertyValue(param);
 
-	const skey = this._getAmfKey(this.ns.aml.vocabularies.shapes.schema);
-	let schema = param && param[skey];
-	if (schema) {
-	  if (schema instanceof Array) {
-		schema = schema[0]
-	  }
-	  if (this._hasType(schema, this.ns.aml.vocabularies.shapes.ArrayShape)) {
-		const examples = paramExample.split(/\n/).map(e => e.substr(1).trim())
-		return { name: paramName, examples }
-	  }
-	}
+    const skey = this._getAmfKey(this.ns.aml.vocabularies.shapes.schema);
+    let schema = param && param[skey];
+    if (schema) {
+      if (schema instanceof Array) {
+        schema = schema[0];
+      }
+      if (this._hasType(schema, this.ns.aml.vocabularies.shapes.ArrayShape)) {
+        const examples = paramExample.split(/\n/).map((e) => e.substr(1).trim());
+        return { name: paramName, examples };
+      }
+    }
 
-	if (paramName && paramExample) {
-	  return { name: paramName, example: paramExample }
-	}
+    if (paramName && paramExample) {
+      return { name: paramName, example: paramExample };
+    }
   }
 }
