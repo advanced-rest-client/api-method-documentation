@@ -855,31 +855,6 @@ describe('<api-method-documentation>', function() {
           assert.lengthOf(element.security, 2);
         });
       });
-    
-      describe('Non-http protocols', () => {
-        let amf;
-        let element;
-
-        before(async () => {
-          amf = await AmfLoader.load(asyncApi, compact);
-        });
-
-        beforeEach(async () => {
-          const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, 'hello', 'publish');
-          element = await modelFixture(amf, endpoint, method);
-          // model change debouncer
-          await aTimeout(0);
-        });
-
-        it('should set endpoint uri with amqp protocol', () => {
-          assert.equal(element.endpointUri, 'amqp://broker.mycompany.com');
-        });
-
-        it('isNonHttpProtocol() should return true', () => {
-          element.noTryIt = false;
-          assert.isTrue(element.isNonHttpProtocol());
-        });
-      })
     });
   });
 });
