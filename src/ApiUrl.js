@@ -275,7 +275,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
       if (schema instanceof Array) {
         schema = schema[0];
       }
-      if (this._hasType(schema, this.ns.aml.vocabularies.shapes.ArrayShape)) {
+      if (paramExample && this._hasType(schema, this.ns.aml.vocabularies.shapes.ArrayShape)) {
         const examples = paramExample.split(/\n/).map((e) => e.substr(1).trim());
         return { name: paramName, examples };
       }
