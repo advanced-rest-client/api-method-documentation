@@ -533,10 +533,10 @@ describe('<api-method-documentation>', function() {
             [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, '/mail', 'get');
           });
 
-          it('sets URL from base uri', async () => {
+          it('sets snippets URL from base uri', async () => {
             const element = await baseUriFixture(amf, endpoint, method);
             await aTimeout();
-            assert.equal(element.endpointUri, 'https://domain.com/mail?box=foo');
+            assert.equal(element.snippetsUri, 'https://domain.com/mail?box=foo');
           });
         })
 
@@ -545,13 +545,13 @@ describe('<api-method-documentation>', function() {
             [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, '/test-parameters/{feature}', 'get');
           });
 
-          it('sets URL from base uri', async () => {
+          it('sets snippets URL from base uri', async () => {
             const element = await baseUriFixture(amf, endpoint, method);
             await aTimeout();
             const expectedUri =
               'https://domain.com/test-parameters/{feature}' +
               '?testRepeatable=value1&testRepeatable=value2&numericRepeatable=123&numericRepeatable=456'
-            assert.equal(element.endpointUri, expectedUri);
+            assert.equal(element.snippetsUri, expectedUri);
           });
         })
       });
