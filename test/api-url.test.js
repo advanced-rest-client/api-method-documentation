@@ -70,14 +70,14 @@ describe('<api-url>', function () {
 		});
 
 		it('should render method', () => {
-			assert.exists(element.shadowRoot.querySelector('.method-value'));
-		})
+		  assert.exists(element.shadowRoot.querySelector('.method-value'));
+		});
 
 		it('should not render method if method is not present', async () => {
-			element.operation = null;
-			await nextFrame();
-			assert.notExists(element.shadowRoot.querySelector('.method-value'));
-		})
+		  element.operation = null;
+		  await nextFrame();
+		  assert.notExists(element.shadowRoot.querySelector('.method-value'));
+		});
 	  });
 
 	  describe('AsyncAPI', () => {
