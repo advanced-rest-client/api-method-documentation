@@ -1,4 +1,4 @@
-import { fixture, assert, html, aTimeout, nextFrame } from '@open-wc/testing';
+import { fixture, assert, html, aTimeout, nextFrame, waitUntil } from '@open-wc/testing';
 import * as sinon from 'sinon';
 import * as MockInteractions from '@polymer/iron-test-helpers/mock-interactions.js';
 import { AmfLoader } from './amf-loader.js';
@@ -856,8 +856,12 @@ describe('<api-method-documentation>', function() {
           assert.lengthOf(element.security, 2);
         });
 
-        it('should render Headers section for AsyncAPI headers', () => {
-          assert.exists(element.shadowRoot.querySelector('api-headers-document'));
+        it('should render Headers section for AsyncAPI headers', async () => {
+          await waitUntil(
+            () => element.shadowRoot.querySelector('api-headers-document'),
+            'api-headers-document renders',
+            { timeout: 1000 },
+          );
         });
       });
 
