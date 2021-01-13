@@ -1,6 +1,5 @@
 import { fixture, assert, html, aTimeout, nextFrame, waitUntil } from '@open-wc/testing';
 import sinon from 'sinon';
-import * as MockInteractions from '@polymer/iron-test-helpers/mock-interactions.js';
 import { AmfLoader } from './amf-loader.js';
 import '../api-method-documentation.js';
 
