@@ -753,23 +753,6 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     ${this._getNavigationTemplate()}`;
   }
 
-  _getMessagesTemplate() {
-    if (this._isAsyncAPI(this.amf)) {
-      const { message } = this;
-      return html`<section class="message-documentation">
-        <api-message-documentation
-          .message="${message}"
-        >
-        </api-message-documentation>
-      </section>
-      `;
-    }
-    return html`
-      ${this._getRequestTemplate()}
-      ${this._getReturnsTemplate()}
-    `;
-  }
-
   _getTitleTemplate() {
     if (this._titleHidden) {
       return '';
