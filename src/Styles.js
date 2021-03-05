@@ -15,6 +15,7 @@ export default css`
   line-height: var(--arc-font-headline-line-height);
   font-weight: var(--api-method-documentation-title-method-font-weight,
     var(--arc-font-headline-font-weight, 500));
+  color: var(--arc-font-headline-color);
   text-transform: capitalize;
 }
 
@@ -22,6 +23,7 @@ export default css`
   font-size: var(--arc-font-title-font-size);
   font-weight: var(--arc-font-title-font-weight);
   line-height: var(--arc-font-title-line-height);
+  color: var(--arc-font-title-color);
   margin: 0.84em 0;
 }
 
@@ -30,6 +32,7 @@ export default css`
   font-size: var(--arc-font-subhead-font-size);
   font-weight: var(--arc-font-subhead-font-weight);
   line-height: var(--arc-font-subhead-line-height);
+  color: var(--arc-font-subhead-color);
 }
 
 .heading4 {
