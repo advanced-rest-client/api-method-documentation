@@ -165,6 +165,8 @@ arc-marked {
 
 .method-label {
   margin-bottom: 0;
+  font-size: var(--api-method-documentation-http-method-label-font-size, inherit);
+  min-width: var(--api-method-documentation-http-method-label-min-width, inherit);
 }
 
 .bottom-nav,
