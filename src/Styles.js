@@ -205,7 +205,7 @@ arc-marked {
 api-security-documentation {
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px var(--api-headers-document-title-border-color, #e5e5e5) dashed;
+  border-bottom: 1px var(--api-headers-document-title-border-color, var(--api-parameters-document-title-border-color, #e5e5e5)) dashed;
 }
 
 api-security-documentation:last-of-type {
