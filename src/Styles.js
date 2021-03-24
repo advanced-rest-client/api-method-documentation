@@ -88,7 +88,7 @@ export default css`
   margin-bottom: 40px;
   margin-top: 20px;
   margin: var(--api-method-documentation-url-margin);
-  background-color: var(--code-background-color);
+  background-color: var(--api-method-documentation-url-background-color, var(--code-background-color));
   color: var(
     --api-method-documentation-url-font-color,
     var(--code-color)
