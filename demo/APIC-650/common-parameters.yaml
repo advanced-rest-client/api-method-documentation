@@ -21,19 +21,3 @@ components:
       schema:
         type: string
         example: "uriParam2Example"
-    QueryParam1:
-      name: queryParam1
-      in: query
-      description: query param for testEndpoint 1 
-      required: true
-      schema:
-        type: string
-        example: "queryParam1Example"
-    QueryParam2:
-      name: queryParam2
-      in: query
-      description: query param for testEndpoint 2
-      required: true
-      schema:
-        type: string
-        example: "queryParam2Example"

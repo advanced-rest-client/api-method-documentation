@@ -912,4 +912,35 @@ describe('<api-method-documentation>', () => {
       });
     });
   });
+
+  describe('APIC-650', () => {
+    let amf;
+    let element;
+
+    before(async () => {
+      amf = await AmfLoader.load('APIC-650');
+    });
+
+    beforeEach(async () => {
+      const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, '/testEndpoint1/{uriParam1}', 'get');
+      element = await modelFixture(amf, endpoint, method);
+      // model change debouncer
+      await aTimeout();
+    });
+
+    it('endpointVariables is computed', () => {
+      assert.typeOf(element.endpointVariables, 'array');
+      assert.equal(AmfLoader.getParamName(element.endpointVariables[0]), 'uriParam1')
+    });
+
+    it('endpointVariables updated after selection changes', async () => {
+      const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, '/testEndpoint2/{uriParam2}', 'get');
+      element.endpoint = endpoint;
+      element.method = method;
+      await aTimeout();
+
+      assert.typeOf(element.endpointVariables, 'array');
+      assert.equal(AmfLoader.getParamName(element.endpointVariables[0]), 'uriParam2')
+    });
+  });
 });

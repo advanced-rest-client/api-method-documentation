@@ -109,6 +109,7 @@ class ComponentDemo extends ApiDemoPage {
       const item = methods[i];
       if (item['@id'] !== id) {
         last = item;
+        // eslint-disable-next-line no-continue
         continue;
       }
       this.method = item;
@@ -163,6 +164,7 @@ class ComponentDemo extends ApiDemoPage {
       ['oas-callbacks', 'OAS 3 callbacks'],
       ['async-api', 'Async API'],
       ['APIC-560', 'APIC-560'],
+      ['APIC-650', 'APIC-650'],
     ].map(([file, label]) => html`
       <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
       <anypoint-item data-src="${file}.json">${label}</anypoint-item>

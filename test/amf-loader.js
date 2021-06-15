@@ -8,7 +8,7 @@ window.customElements.define('helper-element', HelperElement);
 
 const helper = new HelperElement();
 
-AmfLoader.load = async function(fileName, compact) {
+AmfLoader.load = async (fileName, compact) => {
   const compactValue = compact ? '-compact' : '';
   const file = `${fileName}${compactValue}.json`;
   const url = `${window.location.protocol}//${window.location.host}/base/demo/${file}`;
@@ -19,9 +19,9 @@ AmfLoader.load = async function(fileName, compact) {
       try {
         data = JSON.parse(e.target.response);
         /* istanbul ignore next */
-      } catch (e) {
+      } catch (error) {
         /* istanbul ignore next */
-        reject(e);
+        reject(error);
         /* istanbul ignore next */
         return;
       }
@@ -35,26 +35,26 @@ AmfLoader.load = async function(fileName, compact) {
   });
 };
 
-AmfLoader.lookupEndpoint = function(model, endpoint) {
+AmfLoader.lookupEndpoint = (model, endpoint) => {
   helper.amf = model;
   const webApi = helper._computeApi(model);
   return helper._computeEndpointByPath(webApi, endpoint);
 };
 
-AmfLoader.lookupOperation = function(model, endpoint, operation) {
+AmfLoader.lookupOperation = (model, endpoint, operation) => {
   const endPoint = AmfLoader.lookupEndpoint(model, endpoint);
   const opKey = helper._getAmfKey(helper.ns.aml.vocabularies.apiContract.supportedOperation);
   const ops = helper._ensureArray(endPoint[opKey]);
   return ops.find((item) => helper._getValue(item, helper.ns.aml.vocabularies.apiContract.method) === operation);
 };
 
-AmfLoader.lookupPayload = function(model, endpoint, operation) {
+AmfLoader.lookupPayload = (model, endpoint, operation) => {
   const op = AmfLoader.lookupOperation(model, endpoint, operation);
   const expects = helper._computeExpects(op);
   return helper._ensureArray(helper._computePayload(expects));
 };
 
-AmfLoader.lookupEndpointOperation = function(model, endpoint, operation) {
+AmfLoader.lookupEndpointOperation = (model, endpoint, operation) => {
   const endPoint = AmfLoader.lookupEndpoint(model, endpoint);
   const opKey = helper._getAmfKey(helper.ns.aml.vocabularies.apiContract.supportedOperation);
   const ops = helper._ensureArray(endPoint[opKey]);
@@ -62,11 +62,14 @@ AmfLoader.lookupEndpointOperation = function(model, endpoint, operation) {
   return [endPoint, op];
 };
 
-AmfLoader.getEncodes = function(model) {
-  return helper._computeEncodes(model)
-}
+AmfLoader.getEncodes = model => helper._computeEncodes(model)
 
-AmfLoader.getServers = function(model) {
+AmfLoader.getServers = model => {
   helper.amf = model;
   return helper._getServers({});
+}
+
+AmfLoader.getParamName = model => {
+  helper.amf = model;
+  return helper._getValue(model, helper.ns.aml.vocabularies.apiContract.paramName);
 }
