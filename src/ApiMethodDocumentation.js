@@ -413,9 +413,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _expectsChanged(expects) {
-    if (!this.endpointVariables) {
-      this._processEndpointVariables();
-    }
+    this._processEndpointVariables();
     this.headers = this._computeHeaders(expects);
     this.payload = this._computePayload(expects);
     this.queryParameters = this._computeQueryParameters(expects);
