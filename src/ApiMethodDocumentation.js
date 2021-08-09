@@ -843,7 +843,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       >
         <div class="heading3 table-title" role="heading" aria-level="2">Code examples</div>
         <div class="title-area-actions" aria-label="${buttonState}">
-          <anypoint-button class="toggle-button" ?compatibility="${compatibility}">
+          <anypoint-button class="toggle-button" ?compatibility="${compatibility}" data-toggle="code-examples">
             ${label}
             <arc-icon class="icon ${iconClass}" icon="expandMore"></arc-icon>
           </anypoint-button>
@@ -879,7 +879,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       >
         <div class="heading3 table-title" role="heading" aria-level="2">Security</div>
         <div class="title-area-actions" aria-label="${buttonState}">
-          <anypoint-button class="toggle-button security" ?compatibility="${compatibility}">
+          <anypoint-button class="toggle-button security" ?compatibility="${compatibility}" data-toggle="security">
             ${label}
             <arc-icon icon="expandMore" class="icon ${iconClass}"></arc-icon>
           </anypoint-button>
@@ -1014,7 +1014,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
         ?opened="${callbacksOpened}"
       >
         <div class="heading3 table-title" role="heading" aria-level="2">Callbacks</div>
-        <div class="title-area-actions" aria-label="${buttonState}">
+        <div class="title-area-actions" aria-label="${buttonState}" data-toggle="callbacks">
           <anypoint-button class="toggle-button" ?compatibility="${compatibility}">
             ${label}
             <arc-icon icon="expandMore"  class="icon ${iconClass}"></arc-icon>
