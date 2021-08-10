@@ -1014,8 +1014,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
         ?opened="${callbacksOpened}"
       >
         <div class="heading3 table-title" role="heading" aria-level="2">Callbacks</div>
-        <div class="title-area-actions" aria-label="${buttonState}" data-toggle="callbacks">
-          <anypoint-button class="toggle-button" ?compatibility="${compatibility}">
+        <div class="title-area-actions" aria-label="${buttonState}">
+          <anypoint-button class="toggle-button" ?compatibility="${compatibility}" data-toggle="callbacks">
             ${label}
             <arc-icon icon="expandMore"  class="icon ${iconClass}"></arc-icon>
           </anypoint-button>
