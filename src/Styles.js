@@ -16,7 +16,7 @@ export default css`
   font-weight: var(--api-method-documentation-title-method-font-weight,
     var(--arc-font-headline-font-weight, 500));
   color: var(--arc-font-headline-color);
-  text-transform: capitalize;
+  text-transform: var(--api-method-documentation-title-text-transform, capitalize);
 }
 
 .heading2 {
