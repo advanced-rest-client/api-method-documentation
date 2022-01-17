@@ -416,6 +416,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this._processEndpointVariables();
     this.headers = this._computeHeaders(expects);
     this.payload = this._computePayload(expects);
+    this.payloadDescription = this._computeDescription(expects);
     this.queryParameters = this._computeQueryParameters(expects);
     this.hasParameters = this.hasPathParameters || this._hasQueryParameters();
   }
@@ -942,7 +943,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _getBodyTemplate() {
-    const { payload } = this;
+    const { payload, payloadDescription } = this;
     if (!payload || !payload.length) {
       return '';
     }
@@ -958,7 +959,9 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       ?narrow="${narrow}"
       ?compatibility="${compatibility}"
       ?graph="${graph}"
-      .body="${payload}"></api-body-document>`;
+      .body="${payload}"
+      .bodyDescription="${payloadDescription}"
+    ></api-body-document>`;
   }
 
   _getRequestTemplate() {
