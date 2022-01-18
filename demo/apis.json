@@ -14,5 +14,6 @@
   "APIC-553/APIC-553.raml": "RAML 1.0",
   "APIC-560/APIC-560.yaml": "ASYNC 2.0",
   "APIC-582/APIC-582.yaml": "ASYNC 2.0",
-  "APIC-650/APIC-650.yaml": "OAS 3.0"
+  "APIC-650/APIC-650.yaml": "OAS 3.0",
+  "APIC-758/APIC-758.yaml": "OAS 3.0"
 }

@@ -283,6 +283,7 @@ describe('<api-method-documentation>', () => {
       const asyncApi = 'async-api';
       const apic553 = 'APIC-553';
       const apic582 = 'APIC-582';
+      const apic758 = 'APIC-758';
 
       describe('Basic AMF computations', () => {
         let amf;
@@ -908,6 +909,30 @@ describe('<api-method-documentation>', () => {
         it('should render channel message in request documentation section', async () => {
           await waitUntil(() => !!element.shadowRoot.querySelector('.request-documentation'), 'request documentation section not rendered');
           await waitUntil(() => !!element.shadowRoot.querySelector('api-body-document'), 'api-body-document not rendered');
+        });
+      });
+
+      describe('APIC-758', () => {
+        let amf;
+        let element;
+
+        before(async () => {
+          amf = await AmfLoader.load(apic758, compact);
+        });
+
+        beforeEach(async () => {
+          const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, '/pets', 'post');
+          element = await modelFixture(amf, endpoint, method);
+          await aTimeout(0);
+          await aTimeout(0);
+        });
+
+        it('payload is computed', () => {
+          assert.typeOf(element.payload, 'array');
+        });
+
+        it('payloadDescription is computed', () => {
+          assert.equal(element.payloadDescription, 'Pet to add');
         });
       });
     });
