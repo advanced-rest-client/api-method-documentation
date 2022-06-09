@@ -38,7 +38,7 @@
     "@advanced-rest-client/markdown-styles": "^3.1.4",
     "@anypoint-web-components/anypoint-button": "^1.2.3",
     "@anypoint-web-components/anypoint-collapse": "^0.1.0",
-    "@api-components/amf-helper-mixin": "^4.5.14",
+    "@api-components/amf-helper-mixin": "^4.5.19",
     "@api-components/api-annotation-document": "^4.2.1",
     "@api-components/api-body-document": "^4.4.4",
     "@api-components/api-example-generator": "^4.4.8",
