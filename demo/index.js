@@ -165,6 +165,7 @@ class ComponentDemo extends ApiDemoPage {
       ['async-api', 'Async API'],
       ['APIC-560', 'APIC-560'],
       ['APIC-650', 'APIC-650'],
+      ['multiple-messages', 'multiple-messages'],
     ].map(([file, label]) => html`
       <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
       <anypoint-item data-src="${file}.json">${label}</anypoint-item>
