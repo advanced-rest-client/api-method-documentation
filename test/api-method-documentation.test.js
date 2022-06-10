@@ -284,6 +284,7 @@ describe('<api-method-documentation>', () => {
       const apic553 = 'APIC-553';
       const apic582 = 'APIC-582';
       const apic758 = 'APIC-758';
+      const multipleMessages = 'multiple-messages';
 
       describe('Basic AMF computations', () => {
         let amf;
@@ -824,6 +825,30 @@ describe('<api-method-documentation>', () => {
             'api-headers-document renders',
             { timeout: 1000 },
           );
+        });
+
+        describe('Multiple messages', () => {
+          let amf;
+          let element;
+
+          before(async () => {
+            amf = await AmfLoader.load(multipleMessages, compact);
+          });
+
+          beforeEach(async () => {
+            const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, 'shipping-messages', 'subscribe');
+            element = await modelFixture(amf, endpoint, method);
+            // model change debouncer
+            await aTimeout();
+          });
+
+          it('expects is computed', () => {
+            assert.typeOf(element.expects, 'array');
+          });
+
+          it('expects has two elements', () => {
+            assert.equal(element.expects.length, 2);
+          });
         });
       });
 
