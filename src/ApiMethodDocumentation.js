@@ -393,11 +393,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _overwriteExpects() {
-    let expects = this.message;
-    if (Array.isArray(expects)) {
-      [expects] = expects;
-    }
-    this.expects = expects;
+    this.expects = this.message;
   }
 
   _processEndpointChange() {
