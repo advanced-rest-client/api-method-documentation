@@ -393,7 +393,12 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _overwriteExpects() {
-    this.expects = this.message;
+    let expects = this.message;
+    this.expectsArray = expects;
+    if (Array.isArray(expects)) {
+      [expects] = expects;
+    }
+    this.expects = expects;
   }
 
   _processEndpointChange() {
@@ -411,7 +416,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _expectsChanged(expects) {
     this._processEndpointVariables();
     this.headers = this._computeHeaders(expects);
-    this.payload = this._computePayload(expects);
+    this.payload = this._computePayload(this.expectsArray || expects);
     this.payloadDescription = this._computeDescription(expects);
     this.queryParameters = this._computeQueryParameters(expects);
     this.hasParameters = this.hasPathParameters || this._hasQueryParameters();

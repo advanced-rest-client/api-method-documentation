@@ -843,11 +843,11 @@ describe('<api-method-documentation>', () => {
           });
 
           it('expects is computed', () => {
-            assert.typeOf(element.expects, 'array');
+            assert.typeOf(element.expectsArray, 'array');
           });
 
           it('expects has two elements', () => {
-            assert.equal(element.expects.length, 2);
+            assert.equal(element.expectsArray.length, 2);
           });
         });
       });
