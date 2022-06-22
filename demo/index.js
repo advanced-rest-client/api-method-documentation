@@ -151,7 +151,7 @@ class ComponentDemo extends ApiDemoPage {
 
   _apiListTemplate() {
     return [
-      ['demo-api', 'Demo API'],
+      ['streetlights', 'streetlights'],
       ['multi-server', 'Multiple servers'],
       ['google-drive-api', 'Google Drive'],
       ['appian-api', 'Appian API'],
