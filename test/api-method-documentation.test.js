@@ -285,6 +285,7 @@ describe('<api-method-documentation>', () => {
       const apic582 = 'APIC-582';
       const apic758 = 'APIC-758';
       const multipleMessages = 'multiple-messages';
+      const streetlights = 'streetlights';
 
       describe('Basic AMF computations', () => {
         let amf;
@@ -843,11 +844,35 @@ describe('<api-method-documentation>', () => {
           });
 
           it('expects is computed', () => {
-            assert.typeOf(element.expects, 'array');
+            assert.typeOf(element.expectsArray, 'array');
           });
 
           it('expects has two elements', () => {
-            assert.equal(element.expects.length, 2);
+            assert.equal(element.expectsArray.length, 2);
+          });
+        });
+
+        describe('Headers', () => {
+          let amf;
+          let element;
+
+          before(async () => {
+            amf = await AmfLoader.load(streetlights, compact);
+          });
+
+          beforeEach(async () => {
+            const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, 'smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured', 'subscribe');
+            element = await modelFixture(amf, endpoint, method);
+            // model change debouncer
+            await aTimeout(0);
+          });
+
+          it('expects is computed', () => {
+            assert.typeOf(element.expects, 'object');
+          });
+
+          it('headers is computed', () => {
+            assert.typeOf(element.headers, 'object');
           });
         });
       });
