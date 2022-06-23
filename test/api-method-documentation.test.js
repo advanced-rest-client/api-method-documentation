@@ -829,6 +829,9 @@ describe('<api-method-documentation>', () => {
         });
 
         describe('Multiple messages', () => {
+          let amf;
+          let element;
+
           before(async () => {
             amf = await AmfLoader.load(multipleMessages, compact);
           });
@@ -850,6 +853,9 @@ describe('<api-method-documentation>', () => {
         });
 
         describe('Headers', () => {
+          let amf;
+          let element;
+
           before(async () => {
             amf = await AmfLoader.load(streetlights, compact);
           });
