@@ -1018,4 +1018,27 @@ describe('<api-method-documentation>', () => {
       assert.equal(AmfLoader.getParamName(element.endpointVariables[0]), 'uriParam2')
     });
   });
+
+  describe('W-11383870', () => {
+    let amf;
+    let element;
+
+    before(async () => {
+      amf = await AmfLoader.load('W-11383870');
+    });
+
+    beforeEach(async () => {
+      const [endpoint, method] = AmfLoader.lookupEndpointOperation(amf, '/store/order', 'post');
+      element = await modelFixture(amf, endpoint, method);
+      await aTimeout(0);
+    });
+
+    it('should have deprecated property set', () => {
+      assert.isTrue(element.deprecated);
+    });
+
+    it('should render deprecated warning message', () => {
+      assert.exists(element.shadowRoot.querySelector('.deprecated-warning'));
+    });
+  });
 });

@@ -216,6 +216,10 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
        * Optional protocol for the current method
        */
       protocol: { type: String },
+      /**
+       * Determines if the method is deprecated
+       */
+       deprecated: { type: Boolean, reflect: true },
     };
   }
 
@@ -335,6 +339,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.compatibility = false;
     this.renderSecurity = false;
     this.renderCodeSnippets = false;
+    this.deprecated = false;
 
     this.previous = undefined;
     this.next = undefined;
@@ -390,6 +395,11 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.methodSummary = this._getValue(method, this.ns.aml.vocabularies.apiContract.guiSummary);
     this.operationId = this._getValue(method, this.ns.aml.vocabularies.apiContract.operationId);
     this.callbacks = this._computeCallbacks(method);
+    this.deprecated = this._computeIsDeprecated(method);
+  }
+
+  _computeIsDeprecated(method) {
+    return Boolean(this._getValue(method, this._getAmfKey(this.ns.aml.vocabularies.core.deprecated)));
   }
 
   _overwriteExpects() {
@@ -744,6 +754,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     } = this;
     return html`<style>${this.styles}</style>
     ${this._getTitleTemplate()}
+    ${this._deprecatedWarningTemplate()}
     ${this._getUrlTemplate()}
     ${this._getTraitsTemplate()}
     ${hasCustomProperties ? html`<api-annotation-document .shape="${method}"></api-annotation-document>` : ''}
@@ -778,6 +789,13 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     ${methodSummary ? html`<p class="summary">${methodSummary}</p>` : ''}
     ${operationId ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
     `;
+  }
+
+  _deprecatedWarningTemplate() {
+    if (!this.deprecated) {
+      return '';
+    }
+    return html`<div class="deprecated-warning"><span>Warning: Deprecated</span></div>`
   }
 
   _getUrlTemplate() {

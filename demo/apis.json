@@ -17,5 +17,6 @@
   "multiple-messages/multiple-messages.yaml": "ASYNC 2.0",
   "APIC-650/APIC-650.yaml": "OAS 3.0",
   "APIC-758/APIC-758.yaml": "OAS 3.0",
-  "streetlights/streetlights.yaml": "ASYNC 2.0"
+  "streetlights/streetlights.yaml": "ASYNC 2.0",
+  "W-11383870/W-11383870.json": { "type": "OAS 3.0", "mime": "application/json" }
 }

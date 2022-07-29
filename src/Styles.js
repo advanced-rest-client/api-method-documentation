@@ -252,4 +252,17 @@ api-security-documentation:last-of-type {
   margin: 12px 0;
   padding: 8px;
   background-color: var(--api-method-documentation-callback-background-color, #f7f7f7);
-}`;
+}
+
+.deprecated-warning {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.deprecated-warning > span {
+  background-color: var(--api-type-document-type-deprecated-background-color, gray);
+  color: var(--api-type-document-type-deprecated-color, white);
+  padding: var(--api-type-document-deprecated-warning-padding, 3px 6px);
+  border-radius: var(--api-type-document-deprecated-warning-border-radius, 3px);
+}
+`;
