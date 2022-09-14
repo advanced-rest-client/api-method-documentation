@@ -12,6 +12,9 @@ import '@api-components/api-responses-document/api-responses-document.js';
 import '@advanced-rest-client/arc-marked/arc-marked.js';
 import '@anypoint-web-components/anypoint-button/anypoint-icon-button.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
+import "@anypoint-web-components/anypoint-dropdown/anypoint-dropdown.js";
+import "@anypoint-web-components/anypoint-listbox/anypoint-listbox.js";
+import "@anypoint-web-components/anypoint-item/anypoint-item.js";
 import '@advanced-rest-client/http-code-snippets/http-code-snippets.js';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@anypoint-web-components/anypoint-collapse/anypoint-collapse.js';
@@ -219,7 +222,11 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       /**
        * Determines if the method is deprecated
        */
-       deprecated: { type: Boolean, reflect: true },
+      deprecated: { type: Boolean, reflect: true },
+       /**
+        * 
+        */
+      selectedMessage: { type: Object },
     };
   }
 
@@ -291,8 +298,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       return;
     }
     this._expects = value;
-    this.requestUpdate('expects', old);
     this._expectsChanged(value);
+    this.requestUpdate('expects', old);
   }
 
   get server() {
@@ -340,6 +347,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.renderSecurity = false;
     this.renderCodeSnippets = false;
     this.deprecated = false;
+    this.selectedMessage = null;
 
     this.previous = undefined;
     this.next = undefined;
@@ -404,9 +412,9 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   _overwriteExpects() {
     let expects = this.message;
-    this.expectsArray = expects;
     if (Array.isArray(expects)) {
-      [expects] = expects;
+      // eslint-disable-next-line prefer-destructuring
+      expects = expects[0];
     }
     this.expects = expects;
   }
@@ -426,7 +434,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _expectsChanged(expects) {
     this._processEndpointVariables();
     this.headers = this._computeHeaders(expects);
-    this.payload = this._computePayload(this.expectsArray || expects);
+    this.payload = this._computePayload(expects);
     this.payloadDescription = this._computeDescription(expects);
     this.queryParameters = this._computeQueryParameters(expects);
     this.hasParameters = this.hasPathParameters || this._hasQueryParameters();
@@ -985,6 +993,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   _getRequestTemplate() {
     return html`<section class="request-documentation">
+      ${this._getMessagesTemplate()}
       ${this._getCodeSnippetsTemplate()}
       ${this._getSecurityTemplate()}
       ${this._getParametersTemplate()}
@@ -994,6 +1003,34 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     </section>`
   }
 
+  _getMessagesTemplate() {
+    const { message } = this;
+    if (!message || message.length <= 1) {
+      return html``;
+    }
+    return html`<div class="messages-options">
+    <div>This operation has multiple messages. Please select one:</div>
+    <anypoint-dropdown-menu
+      aria-label="Select message from list of available options"
+    >
+      <label slot="label">Selected message</label>
+      <anypoint-listbox slot="dropdown-content" tabindex="-1" selected="0" @selected-changed="${(e) => this._selectedMessageHandler(e)}">
+        ${message.map(msg => this._getMessageTemplate(msg))}
+      </anypoint-listbox>
+    </anypoint-dropdown-menu>
+    </div>`;
+  }
+
+  _getMessageTemplate(message) {
+    const nameKey = this._getAmfKey(this.ns.aml.vocabularies.core.name);
+    const name = this._getValue(message, nameKey);
+    return html`<anypoint-item>${name}</anypoint-item>`
+  }
+
+  _selectedMessageHandler(event) {
+    this.expects = this.message[event.target.selected]
+  }
+  
   _getReturnsTemplate() {
     const { returns } = this;
     if (!returns || !returns.length || this._isAsyncAPI(this.amf)) {
