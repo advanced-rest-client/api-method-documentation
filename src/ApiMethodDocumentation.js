@@ -1005,7 +1005,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   _getMessagesTemplate() {
     const { message } = this;
-    if (!message || message.length <= 1) {
+    if (!message || !Array.isArray(message) || message.length <= 1) {
       return html``;
     }
     return html`<div class="messages-options">
