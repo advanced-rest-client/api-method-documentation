@@ -828,6 +828,10 @@ describe('<api-method-documentation>', () => {
           );
         });
 
+        it('should not render selector to choose a message when there is only one', () => {
+          assert.notExists(element.shadowRoot.querySelector('.messages-options > anypoint-dropdown-menu'))
+        });
+
         describe('Multiple messages', () => {
           let amf;
           let element;
@@ -844,11 +848,15 @@ describe('<api-method-documentation>', () => {
           });
 
           it('expects is computed', () => {
-            assert.typeOf(element.expectsArray, 'array');
+            assert.typeOf(element.message, 'array');
           });
 
           it('expects has two elements', () => {
-            assert.equal(element.expectsArray.length, 2);
+            assert.equal(element.message.length, 2);
+          });
+
+          it('should render dropdown selector to choose a message', () => {
+            assert.exists(element.shadowRoot.querySelector('.messages-options > anypoint-dropdown-menu'))
           });
         });
 

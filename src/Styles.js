@@ -265,4 +265,8 @@ api-security-documentation:last-of-type {
   padding: var(--api-type-document-deprecated-warning-padding, 3px 6px);
   border-radius: var(--api-type-document-deprecated-warning-border-radius, 3px);
 }
+
+.messages-options > anypoint-dropdown-menu {
+  margin-left: 0;
+}
 `;
