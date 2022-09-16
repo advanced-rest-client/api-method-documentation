@@ -1226,7 +1226,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       case 'subscribe':
         return this.returns;
       case 'publish':
-        return this.expects;
+        return this._computeAllExpects(this.method);
       default:
         return undefined;
     }
