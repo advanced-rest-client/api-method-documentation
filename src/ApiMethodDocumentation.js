@@ -219,14 +219,19 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
        * Optional protocol for the current method
        */
       protocol: { type: String },
-      /**
+        /**
        * Determines if the method is deprecated
        */
-      deprecated: { type: Boolean, reflect: true },
-       /**
-        * 
-        */
-      selectedMessage: { type: Object },
+        deprecated: { type: Boolean, reflect: true },
+        /**
+         *
+         */
+       selectedMessage: { type: Object },
+      /**
+      * Bindings for the type document.
+      * This is a map of the type name to the binding name.
+      */
+      bindings: {type: Array},
     };
   }
 
@@ -256,6 +261,19 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     }
     this._endpoint = value;
     this._endpointChanged();
+  }
+
+  get bindings() {
+    return this._bindings;
+  }
+
+  set bindings(value) {
+    const old = this._bindings;
+    /* istanbul ignore if */
+    if (old === value) {
+      return;
+    }
+    this._bindings = value;
   }
 
   get baseUri() {
@@ -413,8 +431,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _overwriteExpects() {
     let expects = this.message;
     if (Array.isArray(expects)) {
-      // eslint-disable-next-line prefer-destructuring
-      expects = expects[0];
+       // eslint-disable-next-line prefer-destructuring
+       expects = expects[0];
     }
     this.expects = expects;
   }
@@ -422,6 +440,19 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _processEndpointChange() {
     this.__endpointProcessingDebouncer = false;
     this._processServerInfo();
+  }
+
+  _computeBindings(expects) {
+    let result = [];
+    if (!expects) {
+      return [];
+    }
+    const keyBinding = this._getAmfKey(this.ns.aml.vocabularies.apiBinding.binding)
+    const keyBindings = this._getAmfKey(this.ns.aml.vocabularies.apiBinding.bindings)
+    if (keyBinding && keyBindings) {
+      result = expects[keyBinding][0][keyBindings]
+    }
+    return result
   }
 
   _hasQueryParameters() {
@@ -434,6 +465,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _expectsChanged(expects) {
     this._processEndpointVariables();
     this.headers = this._computeHeaders(expects);
+    this.bindings = this._computeBindings(expects)
     this.payload = this._computePayload(expects);
     this.payloadDescription = this._computeDescription(expects);
     this.queryParameters = this._computeQueryParameters(expects);
@@ -670,7 +702,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   /**
    * Computes a label for the section toggle buttons.
-   * @param {boolean} opened 
+   * @param {boolean} opened
    * @returns {string}
    */
   _computeToggleActionLabel(opened) {
@@ -679,7 +711,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   /**
    * Computes state of toggle button.
-   * @param {boolean} opened 
+   * @param {boolean} opened
    * @returns {string}
    */
   _computeToggleButtonState(opened) {
@@ -688,7 +720,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   /**
    * Computes class for the toggle's button icon.
-   * @param {boolean} opened 
+   * @param {boolean} opened
    * @returns {string}
    */
   _computeToggleIconClass(opened) {
@@ -970,7 +1002,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _getBodyTemplate() {
-    const { payload, payloadDescription } = this;
+    const { payload, payloadDescription, bindings } = this;
     if (!payload || !payload.length) {
       return '';
     }
@@ -988,7 +1020,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       ?graph="${graph}"
       .body="${payload}"
       .bodyDescription="${payloadDescription}"
-    ></api-body-document>`;
+      .bindings="${bindings}"
+      ></api-body-document>`;
   }
 
   _getRequestTemplate() {
@@ -1030,7 +1063,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _selectedMessageHandler(event) {
     this.expects = this.message[event.target.selected]
   }
-  
+
   _getReturnsTemplate() {
     const { returns } = this;
     if (!returns || !returns.length || this._isAsyncAPI(this.amf)) {
