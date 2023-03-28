@@ -445,13 +445,12 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   _computeBindings(expects) {
     let result = [];
     if (!expects) {
-      return [];
+      result = [];
     }
     const keyBinding = this._getAmfKey(this.ns.aml.vocabularies.apiBinding.binding)
     const keyBindings = this._getAmfKey(this.ns.aml.vocabularies.apiBinding.bindings)
-    if (keyBinding && keyBindings) {
-      result = expects[keyBinding][0][keyBindings]
-    }
+    result = expects && expects[keyBinding] ? expects[keyBinding][0][keyBindings] : []
+
     return result
   }
 
