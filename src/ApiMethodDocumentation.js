@@ -639,7 +639,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     if (headers && headers.length) {
       result = '';
       headers.forEach((item) => {
-        const name = this._getValue(item, this.ns.aml.vocabularies.core.name);
+        const name = this._getValue(item, this.ns.aml.vocabularies.apiContract.paramName) || this._getValue(item, this.ns.aml.vocabularies.core.name);
         const value = this._computePropertyValue(item) || '';
         result += `${name}: ${value}\n`;
       });
