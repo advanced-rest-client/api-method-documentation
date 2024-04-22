@@ -991,12 +991,17 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       compatibility,
       graph
     } = this;
+
+    // hidden example when is not an async api 
+    const noMainExample = !this._isAsyncAPI(amf)
+
     return html`<api-headers-document
       opened
       .amf="${amf}"
       ?narrow="${narrow}"
       ?compatibility="${compatibility}"
       ?graph="${graph}"
+      .noMainExample="${noMainExample}"
       .headers="${headers}"></api-headers-document>`;
   }
 
