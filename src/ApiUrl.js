@@ -284,7 +284,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
 
   _getAsyncPathTemplate() {
     if (this.isNotHttp && !!this._method) {
-      return html`<div class="async-servers-path">${this.path}</div>`;
+      return html`<div class="async-servers-path url-channel-value">${this.path}</div>`;
     }
     return '';
   }
@@ -299,7 +299,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   _getAsyncServersNamesList(asyncServersNames) {
-      return asyncServersNames.map((name) => html`<span class="async-server-name">${name}</span>`)
+      return asyncServersNames.map((name) => html`<span class="async-server-name url-value">${name}</span>`)
   }
 
   /**

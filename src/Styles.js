@@ -274,25 +274,20 @@ api-security-documentation:last-of-type {
   margin-left: 0;
 }
 
-.async-servers-names-area{
-  flex-wrap: wrap
-}
-
 .async-servers{
   margin-left: 11px;
 }
 
 .async-servers .async-servers-path{
-  color: var(--api-method-documentation-async-channel-name-color,#000);
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   margin-top: -1px;
+  word-break: break-all;
 }
 
 .async-servers .async-server-names-title{
-  color: var(--api-method-documentation-async-server-names-title-color,#414141);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;

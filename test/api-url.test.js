@@ -148,15 +148,15 @@ describe('<api-url>', () => {
 			});
 
 			it('should render channel', async () => {
-				const channel = 'Channelsmartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured'
-				await waitUntil(() => element.shadowRoot.querySelector('.url-channel-value'));
-				assert.equal(element.shadowRoot.querySelector('.url-channel-value').textContent, channel);
+				const channel = 'smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured'
+				await waitUntil(() => element.shadowRoot.querySelector('.async-servers-path'));
+				assert.equal(element.shadowRoot.querySelector('.async-servers-path').textContent, channel);
 			});
 
 			it('should render server', async () => {
-				const expectedServer = 'Servermqtt://api.streetlights.smartylighting.com:{port}'
-				await waitUntil(() => element.shadowRoot.querySelector('.url-server-value'));
-				assert.equal(element.shadowRoot.querySelector('.url-server-value').textContent, expectedServer);
+				const expectedServer = 'production'
+				await waitUntil(() => element.shadowRoot.querySelector('.async-server-name'));
+				assert.equal(element.shadowRoot.querySelector('.async-server-name').textContent, expectedServer);
 			});
 
 			it('should only render url value when no operation selected', async () => {
