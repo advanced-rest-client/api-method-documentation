@@ -55,12 +55,17 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
        * @attribute
        */
       baseUri: { type: String },
+      /**
+       * Optional, operation id that is render only for async api
+       */
+      operationId:{type: String},
       _url: { type: String },
       _method: { type: String },
       _protocol: { type: String },
       _protocolVersion: { type: String },
       _operation: { type: Object },
-      _server: { type: Object }
+      _server: { type: Object },
+      _operationId:{type: String}
     };
   }
 
@@ -189,6 +194,14 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     return null      
   }
 
+  get operationId(){
+    return this._operationId
+  }
+
+  set operationId(value){
+    this._operationId = value
+  }
+
   render() {
     const { url, asyncServersNames } = this;
     const isAsyncApi = this._isAsyncAPI(this.amf)
@@ -275,6 +288,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
         ${this._getMethodTemplate()}
         <div class="async-servers">
           ${this._getAsyncPathTemplate()}
+          ${this._getOperationIdTemplate()}
           ${this._getAsyncServersNamesTemplate(asyncServersNames)}
         </div>
       </section>
@@ -287,6 +301,15 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
       return html`<div class="async-servers-path url-channel-value">${this.path}</div>`;
     }
     return '';
+  }
+
+  _getOperationIdTemplate() {
+    const { operationId } = this;
+    if (operationId) {
+      return html`<div class="async-server-names-container">
+        <span class="async-server-names-title">Operation ID: ${operationId}</span></div>`
+    }
+    return html``
   }
 
   _getAsyncServersNamesTemplate(asyncServersNames) {
