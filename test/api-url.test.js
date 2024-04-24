@@ -115,6 +115,10 @@ describe('<api-url>', () => {
 		  assert.equal(element.url, 'amqp://broker.mycompany.com');
 		});
 
+		it('should compute server names', () => {
+		  assert.equal(element.asyncServersNames[0], 'production');
+		});
+
 		it('should compute method', () => {
 		  assert.equal(element._method, 'PUBLISH');
 		});
