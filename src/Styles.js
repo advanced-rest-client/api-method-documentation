@@ -93,9 +93,13 @@ export default css`
     --api-method-documentation-url-font-color,
     var(--code-color)
   );
-  padding: var(--api-method-documentation-url-padding, 13px);
+  padding: var(--api-method-documentation-url-padding, 8px);
   border-radius: var(--api-method-documentation-url-border-radius, 4px);
   position: relative;
+}
+
+.async-servers-names-area{
+  padding: var(--api-method-documentation-url-padding, 13px);
 }
 
 .section-title-area {
