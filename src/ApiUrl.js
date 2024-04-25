@@ -55,12 +55,17 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
        * @attribute
        */
       baseUri: { type: String },
+      /**
+       * Optional, operation id that is render only for async api
+       */
+      operationId:{type: String},
       _url: { type: String },
       _method: { type: String },
       _protocol: { type: String },
       _protocolVersion: { type: String },
       _operation: { type: Object },
-      _server: { type: Object }
+      _server: { type: Object },
+      _operationId:{type: String}
     };
   }
 
@@ -165,8 +170,46 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     return this._baseUri;
   }
 
+
+
+  get asyncServersNames(){
+    if(!this.endpoint){
+      return ''
+    }
+    const endpoint = Array.isArray(this.endpoint) ? this.endpoint[0]: this.endpoint
+    const apiContractServerKey = this._getAmfKey( this.ns.aml.vocabularies.apiContract.server)
+    const endpointServers = this._ensureArray(endpoint[apiContractServerKey])
+
+    // try to find servers in channel level
+    if(endpointServers){
+      return endpointServers.map((item)=>(this._getValue(item, this.ns.aml.vocabularies.core.name)));  
+    }
+
+    // try to find root server (only one) that is received by property
+    if(this.server){
+      return [this._getValue(this.server, this.ns.aml.vocabularies.core.name)]
+    }
+
+    // in case that async api doesn't have servers
+    return null      
+  }
+
+  get operationId(){
+    return this._operationId
+  }
+
+  set operationId(value){
+    this._operationId = value
+  }
+
   render() {
-    const { url } = this;
+    const { url, asyncServersNames } = this;
+    const isAsyncApi = this._isAsyncAPI(this.amf)
+
+    if(isAsyncApi && asyncServersNames){
+      // only if an async api and has servers
+      return this.renderAsyncApi(asyncServersNames)
+    }
     return html`
       <style>${this.styles}</style>
       <section class="url-area">
@@ -232,6 +275,54 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     }
     this._url = this._computeUri(_endpoint, options);
     this._dispatchChangeEvent();
+  }
+
+  renderAsyncApi(asyncServersNames){
+    const { url, _method } = this;
+    if(!_method){
+      return ''
+    }
+    return html`
+      <style>${this.styles}</style>
+      <section class="async-servers-names-area">
+        ${this._getMethodTemplate()}
+        <div class="async-servers">
+          ${this._getAsyncPathTemplate()}
+          ${this._getOperationIdTemplate()}
+          ${this._getAsyncServersNamesTemplate(asyncServersNames)}
+        </div>
+      </section>
+      <clipboard-copy id="urlCopy" .content="${url}"></clipboard-copy>
+    `;
+  }
+
+  _getAsyncPathTemplate() {
+    if (this.isNotHttp && !!this._method) {
+      return html`<div class="async-servers-path url-channel-value">${this.path}</div>`;
+    }
+    return '';
+  }
+
+  _getOperationIdTemplate() {
+    const { operationId } = this;
+    if (operationId) {
+      return html`<div class="async-server-names-container">
+        <span class="async-server-names-title">Operation ID: ${operationId}</span></div>`
+    }
+    return html``
+  }
+
+  _getAsyncServersNamesTemplate(asyncServersNames) {
+    const { _method } = this;
+    if (asyncServersNames && !!_method) {
+      return html`<div class="async-server-names-container">
+        <span class="async-server-names-title">Available on servers:</span> ${this._getAsyncServersNamesList(asyncServersNames)}</div>`
+    }
+    return html``
+  }
+
+  _getAsyncServersNamesList(asyncServersNames) {
+      return asyncServersNames.map((name) => html`<span class="async-server-name url-value">${name}</span>`)
   }
 
   /**

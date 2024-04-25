@@ -804,6 +804,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _getTitleTemplate() {
+    const isAsyncApi = this._isAsyncAPI(this.amf)
     if (this._titleHidden) {
       return '';
     }
@@ -826,7 +827,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       </div>`}
     </div>
     ${methodSummary ? html`<p class="summary">${methodSummary}</p>` : ''}
-    ${operationId ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
+    ${operationId && !isAsyncApi ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
     `;
   }
 
@@ -846,6 +847,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       .apiVersion="${this.apiVersion}"
       .baseUri="${this.baseUri}"
       .operation="${this.method}"
+      .operationId="${this.operationId}"
       @change="${this._handleUrlChange}"
     >
     </api-url>`;

@@ -73,7 +73,7 @@ export default css`
   flex: 1;
 }
 
-.url-area {
+.url-area, .async-servers-names-area {
   flex: 1;
   display: flex;
   flex-direction: row;
@@ -96,6 +96,10 @@ export default css`
   padding: var(--api-method-documentation-url-padding, 8px);
   border-radius: var(--api-method-documentation-url-border-radius, 4px);
   position: relative;
+}
+
+.async-servers-names-area{
+  padding: var(--api-method-documentation-url-padding, 13px);
 }
 
 .section-title-area {
@@ -268,5 +272,45 @@ api-security-documentation:last-of-type {
 
 .messages-options > anypoint-dropdown-menu {
   margin-left: 0;
+}
+
+.async-servers{
+  margin-left: 11px;
+}
+
+.async-servers .async-servers-path{
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: -1px;
+  word-break: break-all;
+}
+
+.async-servers .async-server-names-title{
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  font-family: var(--api-method-documentation-async-server-names-title-font,Helvetica)
+}
+
+.async-servers .async-server-names-container{
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+
+.async-servers .async-server-name{
+  color: var(--api-method-documentation-async-server-names-color,#249FC6);
+  text-align: center;
+  font-family: var(--api-method-documentation-async-server-names-font,Avenir);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border-radius: 4px;
+  border: 1px solid var(--api-method-documentation-async-server-names-border-color,#249FC6);;
+  padding: 0px 8px 0px 8px;
+  margin-right: 10px;
 }
 `;
