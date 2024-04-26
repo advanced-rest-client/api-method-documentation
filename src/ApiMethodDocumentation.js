@@ -1055,7 +1055,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _getBodyTemplate() {
-    const { payload, payloadDescription, bindings } = this;
+    const { payload, payloadDescription, bindings, endpoint } = this;
     if (!payload || !payload.length) {
       return '';
     }
@@ -1071,6 +1071,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       ?narrow="${narrow}"
       ?compatibility="${compatibility}"
       ?graph="${graph}"
+      .endpoint="${endpoint}"
       .body="${payload}"
       .bodyDescription="${payloadDescription}"
       .bindings="${bindings}"
