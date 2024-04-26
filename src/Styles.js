@@ -313,4 +313,8 @@ api-security-documentation:last-of-type {
   padding: 0px 8px 0px 8px;
   margin-right: 10px;
 }
+
+.async-method-security{
+  margin-top: 17px;
+}
 `;
