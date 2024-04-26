@@ -817,7 +817,7 @@ describe('<api-method-documentation>', () => {
         });
 
         it('should set security when security is defined in server node', () => {
-          assert.lengthOf(element.security, 2);
+          assert.lengthOf(element.serversSecurity, 2);
         });
 
         it('should render Headers section for AsyncAPI headers', async () => {

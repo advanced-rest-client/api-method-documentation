@@ -403,6 +403,36 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this._processServerInfo();
   }
 
+  get asyncSecurityServers(){
+    if(!this.endpoint){
+      return []
+    }
+    const endpoint = Array.isArray(this.endpoint) ? this.endpoint[0]: this.endpoint
+    const apiContractServerKey = this._getAmfKey( this.ns.aml.vocabularies.apiContract.server)
+    const endpointServers = this._ensureArray(endpoint[apiContractServerKey])
+    const apiSecurityKey = this._getAmfKey( this.ns.aml.vocabularies.security.security)
+    
+    // try to find servers in channel level
+    if(endpointServers){
+      return endpointServers.map((server)=>server[apiSecurityKey] || null).filter(elem=>elem!==null).flat();  
+    }
+
+    // try to find root server (only one) that is received by property
+    if(this.server){
+      return this._ensureArray(this.server[apiSecurityKey]) || []
+    }
+
+    // in case that async api doesn't have servers
+    return []      
+  }
+
+  _computeAsyncSecurityMethod(methodSecurity,serversSecurity){
+    if(!Array.isArray(methodSecurity) || !Array.isArray(serversSecurity)){
+      return []
+    }
+    return methodSecurity.filter(method => !serversSecurity.some(server=>server['@id']===method['@id']));
+  }
+
   _processMethodChange() {
     this.__methodProcessingDebouncer = false;
     const { method } = this;
@@ -413,8 +443,20 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.returns = this._computeReturns(method);
     if (this._isAsyncAPI(this.amf)) {
       this._overwriteExpects();
+
+      // find security from all servers for this endpoint
+      this.serversSecurity = this.asyncSecurityServers;
+
+      // security that is defined by operation
+      const methodSecurity = this._computeSecurity(method);
+
+      // method security that is defined by operation and is not defined by servers
+      this.methodSecurity = this._computeAsyncSecurityMethod(methodSecurity,this.serversSecurity);
+      this.security = this.methodSecurity.length>0?this.methodSecurity : this.serversSecurity;
+    }else{
+      this.security = this._computeSecurity(method) || this._computeSecurity(this.server);
     }
-    this.security = this._computeSecurity(method) || this._computeSecurity(this.server);
+    
     const extendsTypes = this._computeExtends(method);
     this.extendsTypes = extendsTypes;
     this.traits = this._computeTraits(extendsTypes);
@@ -923,7 +965,12 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _getSecurityTemplate() {
-    const { renderSecurity, security } = this;
+    const { renderSecurity, serversSecurity, security: securityNoAsync } = this;
+    let security = securityNoAsync
+    if(this._isAsyncAPI(this.amf)){
+      // when is async api shows security that is defined by servers
+      security = serversSecurity
+    }
     if (!renderSecurity || !security || !security.length) {
       return '';
     }
@@ -1032,6 +1079,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   _getRequestTemplate() {
     return html`<section class="request-documentation">
+      ${this._getAsyncSecurityMethodTemplate()}
       ${this._getMessagesTemplate()}
       ${this._getCodeSnippetsTemplate()}
       ${this._getSecurityTemplate()}
@@ -1040,6 +1088,27 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       ${this._getBodyTemplate()}
       ${this._callbacksTemplate()}
     </section>`
+  }
+
+  _getAsyncSecurityMethodTemplate() {
+    const { renderSecurity, methodSecurity } = this;
+    if (!renderSecurity || !methodSecurity || !methodSecurity.length || !this._isAsyncAPI(this.amf)) {
+      return '';
+    }
+    const {  compatibility, amf, narrow } = this;
+    return html`<section class="async-method-security">
+      <div
+        class="section-title-area"
+      >
+        <div class="heading3 table-title" role="heading" aria-level="2">Additional security requirements</div>
+        
+      </div>
+        ${methodSecurity.map((item) => html`<api-security-documentation
+          .amf="${amf}"
+          .security="${item}"
+          ?narrow="${narrow}"
+          ?compatibility="${compatibility}"></api-security-documentation>`)}
+    </section>`;
   }
 
   _getMessagesTemplate() {
