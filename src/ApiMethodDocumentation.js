@@ -426,6 +426,13 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     return []      
   }
 
+  /**
+   * Filters the methodSecurity array to remove elements that have the same '@id' as the elements in the serversSecurity array.
+   * 
+   * @param {object[]} methodSecurity - The array of method security objects.
+   * @param {object[]} serversSecurity - The array of server security objects.
+   * @returns {object[]} The filtered methodSecurity array with unique elements based on the '@id' key.
+   */
   _computeAsyncSecurityMethod(methodSecurity,serversSecurity){
     if(!Array.isArray(methodSecurity) || !Array.isArray(serversSecurity)){
       return []
