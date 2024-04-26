@@ -448,18 +448,10 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.hasCustomProperties = this._computeHasCustomProperties(method);
     this.expects = this._computeExpects(method);
     this.returns = this._computeReturns(method);
+    
     if (this._isAsyncAPI(this.amf)) {
       this._overwriteExpects();
-
-      // find security from all servers for this endpoint
-      this.serversSecurity = this.asyncSecurityServers;
-
-      // security that is defined by operation
-      const methodSecurity = this._computeSecurity(method);
-
-      // method security that is defined by operation and is not defined by servers
-      this.methodSecurity = this._computeAsyncSecurityMethod(methodSecurity,this.serversSecurity);
-      this.security = this.methodSecurity.length>0?this.methodSecurity : this.serversSecurity;
+      this._computeAsyncApiSecurity()
     }else{
       this.security = this._computeSecurity(method) || this._computeSecurity(this.server);
     }
@@ -471,6 +463,19 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.operationId = this._getValue(method, this.ns.aml.vocabularies.apiContract.operationId);
     this.callbacks = this._computeCallbacks(method);
     this.deprecated = this._computeIsDeprecated(method);
+  }
+
+  _computeAsyncApiSecurity(){
+      const { method } = this;
+      // find security from all servers for this endpoint
+      this.serversSecurity = this.asyncSecurityServers;
+
+      // security that is defined by operation
+      const methodSecurity = this._computeSecurity(method);
+
+      // method security that is defined by operation and is not defined by servers
+      this.methodSecurity = this._computeAsyncSecurityMethod(methodSecurity,this.serversSecurity);
+      this.security = this.methodSecurity.length > 0 ? this.methodSecurity : this.serversSecurity;
   }
 
   _computeIsDeprecated(method) {
