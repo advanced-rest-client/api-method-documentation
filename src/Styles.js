@@ -301,7 +301,8 @@ api-security-documentation:last-of-type {
 }
 
 .async-servers .async-server-name{
-  color: var(--api-method-documentation-async-server-names-color,#249FC6);
+  color: var(--api-method-documentation-async-server-names-color,#ffffff);
+  background-color: var(--api-method-documentation-async-server-names-bg-color,#506773);
   text-align: center;
   font-family: var(--api-method-documentation-async-server-names-font,Avenir);
   font-size: 14px;
@@ -309,8 +310,8 @@ api-security-documentation:last-of-type {
   font-weight: 500;
   line-height: normal;
   border-radius: 4px;
-  border: 1px solid var(--api-method-documentation-async-server-names-border-color,#249FC6);;
-  padding: 0px 8px 0px 8px;
+  border: 1px solid var(--api-method-documentation-async-server-names-border-color,#506773);;
+  padding: 1px 8px 1px 8px;
   margin-right: 10px;
 }
 

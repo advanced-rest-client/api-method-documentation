@@ -278,8 +278,8 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   renderAsyncApi(asyncServersNames){
-    const { url, _method } = this;
-    if(!_method){
+    const { url, _endpoint } = this;
+    if(!_endpoint){
       return ''
     }
     return html`
@@ -297,7 +297,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   _getAsyncPathTemplate() {
-    if (this.isNotHttp && !!this._method) {
+    if (this.isNotHttp) {
       return html`<div class="async-servers-path url-channel-value">${this.path}</div>`;
     }
     return '';
@@ -313,8 +313,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   _getAsyncServersNamesTemplate(asyncServersNames) {
-    const { _method } = this;
-    if (asyncServersNames && !!_method) {
+    if (asyncServersNames) {
       return html`<div class="async-server-names-container">
         <span class="async-server-names-title">Available on servers:</span> ${this._getAsyncServersNamesList(asyncServersNames)}</div>`
     }
