@@ -292,12 +292,16 @@ api-security-documentation:last-of-type {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  font-family: var(--api-method-documentation-async-server-names-title-font,Helvetica)
+  font-family: var(--api-method-documentation-async-server-names-title-font,Helvetica);
+  margin-right: 10px;
 }
 
 .async-servers .async-server-names-container{
   margin-top: 16px;
   margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .async-servers .async-server-name{
@@ -313,6 +317,17 @@ api-security-documentation:last-of-type {
   border: 1px solid var(--api-method-documentation-async-server-names-border-color,#506773);;
   padding: 1px 8px 1px 8px;
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  word-break: auto-phrase;
+  max-width: fit-content;
+}
+
+@media (max-width: 385px) {
+  .async-servers .async-server-name {
+    margin-bottom: 10px;
+  }
 }
 
 .async-method-security{
