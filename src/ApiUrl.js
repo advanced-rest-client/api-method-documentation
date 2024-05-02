@@ -59,6 +59,14 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
        * Optional, operation id that is render only for async api
        */
       operationId:{type: String},
+      /**
+       * Adds a servers to async API
+       *
+       * @param {string} url - The URL of the server.
+       * @param {object} [description] - An object containing a string `description` property.
+       */
+      servers: {type:Array},
+      _servers: {type:Array},
       _url: { type: String },
       _method: { type: String },
       _protocol: { type: String },
@@ -117,6 +125,19 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     this._updateUrl();
   }
 
+  get servers() {
+    return this._servers;
+  }
+
+  set servers(value) {
+    const old = this._servers;
+    if (old === value) {
+      return;
+    }
+    this._servers = value;
+    this.requestUpdate('servers', old);
+  }
+
   get endpoint() {
     return this._endpoint;
   }
@@ -173,16 +194,11 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
 
 
   get asyncServersNames(){
-    if(!this.endpoint){
-      return ''
-    }
-    const endpoint = Array.isArray(this.endpoint) ? this.endpoint[0]: this.endpoint
-    const apiContractServerKey = this._getAmfKey( this.ns.aml.vocabularies.apiContract.server)
-    const endpointServers = this._ensureArray(endpoint[apiContractServerKey])
+    const servers = this._ensureArray(this.servers)
 
     // try to find servers in channel level
-    if(endpointServers){
-      return endpointServers.map((item)=>(this._getValue(item, this.ns.aml.vocabularies.core.name)));  
+    if(servers){
+      return servers.map((item)=>(this._getValue(item, this.ns.aml.vocabularies.core.name)));  
     }
 
     // try to find root server (only one) that is received by property
@@ -278,11 +294,9 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   renderAsyncApi(asyncServersNames){
-    const { url, _endpoint } = this;
-    if(!_endpoint){
-      return ''
-    }
-    return html`
+    const { url } = this;
+   
+   return html`
       <style>${this.styles}</style>
       <section class="async-servers-names-area">
         ${this._getMethodTemplate()}

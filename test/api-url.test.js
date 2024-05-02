@@ -166,8 +166,8 @@ describe('<api-url>', () => {
 				await nextFrame();
 				await nextFrame();
 
-				const url = 'mqtt://api.streetlights.smartylighting.com:{port}'
-				assert.equal(element.shadowRoot.querySelector('.url-value').textContent.trim(), url);
+				const expectedServer = 'production'
+				assert.equal(element.shadowRoot.querySelector('.url-value').textContent.trim(), expectedServer);
 			});
 		});
 	});
