@@ -1249,6 +1249,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       amf,
       compatibility,
       graph,
+      servers
     } = this;
     return html`
       <div class="callback-section">
@@ -1257,6 +1258,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
           .amf="${amf}"
           .method="${method}"
           .endpoint="${endpoint}"
+          .servers="${servers}"
           ?compatibility="${compatibility}"
           ?graph="${graph}"
           noTryit
