@@ -232,6 +232,14 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       * This is a map of the type name to the binding name.
       */
       bindings: {type: Array},
+      /**
+       * Adds a servers to async API
+       *
+       * @param {string} url - The URL of the server.
+       * @param {object} [description] - An object containing a string `description` property.
+       */
+      servers: {type:Array},
+      _servers: {type:Array},
     };
   }
 
@@ -333,6 +341,21 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this._server = value;
     this.requestUpdate('server', old);
     this._processServerInfo();
+  }
+
+  get servers() {
+    return this._servers;
+  }
+
+  set servers(value) {
+   
+    const old = this._servers;
+    /* istanbul ignore if */
+    if (old === value) {
+      return;
+    }
+    this._servers = value;
+    this.requestUpdate('servers', old);
   }
 
   get _titleHidden() {
@@ -897,6 +920,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     <api-url
       .amf="${this.amf}"
       .server="${this.server}"
+      .servers="${this.servers}"
       .endpoint="${this.endpoint}"
       .apiVersion="${this.apiVersion}"
       .baseUri="${this.baseUri}"
@@ -1225,6 +1249,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       amf,
       compatibility,
       graph,
+      servers
     } = this;
     return html`
       <div class="callback-section">
@@ -1233,6 +1258,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
           .amf="${amf}"
           .method="${method}"
           .endpoint="${endpoint}"
+          .servers="${servers}"
           ?compatibility="${compatibility}"
           ?graph="${graph}"
           noTryit
