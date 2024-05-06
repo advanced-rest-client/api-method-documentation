@@ -59,14 +59,6 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
        * Optional, operation id that is render only for async api
        */
       operationId:{type: String},
-      /**
-       * Adds a servers to async API
-       *
-       * @param {string} url - The URL of the server.
-       * @param {object} [description] - An object containing a string `description` property.
-       */
-      servers: {type:Array},
-      _servers: {type:Array},
       _url: { type: String },
       _method: { type: String },
       _protocol: { type: String },
@@ -126,16 +118,11 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   get servers() {
-    return this._servers;
-  }
-
-  set servers(value) {
-    const old = this._servers;
-    if (old === value) {
-      return;
+    let endpointId
+    if(this.endpoint){
+      endpointId = this.endpoint["@id"]
     }
-    this._servers = value;
-    this.requestUpdate('servers', old);
+    return this._getServers({ endpointId });
   }
 
   get endpoint() {
