@@ -298,10 +298,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   _getAsyncPathTemplate() {
-    if (this.isNotHttp) {
-      return html`<div class="async-servers-path url-channel-value">${this.path}</div>`;
-    }
-    return '';
+      return html`<div class="async-servers-path url-channel-value">${this.path || ''}</div>`;    
   }
 
   _getOperationIdTemplate() {
