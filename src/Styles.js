@@ -315,7 +315,7 @@ api-security-documentation:last-of-type {
   line-height: normal;
   border-radius: 4px;
   border: 1px solid var(--api-method-documentation-async-server-names-border-color,#506773);;
-  padding: 1px 8px 1px 8px;
+  padding: 4px;
   margin-right: 10px;
   display: flex;
   flex-direction: column;
