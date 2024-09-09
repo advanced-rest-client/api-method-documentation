@@ -850,7 +850,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     ${this._deprecatedWarningTemplate()}
     ${this._getUrlTemplate()}
     ${this._getTraitsTemplate()}
-    ${hasCustomProperties ? html`<api-annotation-document .shape="${method}"></api-annotation-document>` : ''}
+    ${hasCustomProperties ? html`<api-annotation-document .amf="${this.amf}" .shape="${method}"></api-annotation-document>` : ''}
     ${this._getDescriptionTemplate()}
     ${this._getRequestTemplate()}
     ${this._getReturnsTemplate()}
