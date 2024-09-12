@@ -497,6 +497,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   _computeBindings(expects) {
+    console.log("🚀 ~ ApiMethodDocumentation ~ _computeBindings ~ expects:", expects)
+    console.log(this.endpoint, this.method)
     let result = [];
     if (!expects) {
       result = [];
@@ -504,6 +506,18 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     const keyBinding = this._getAmfKey(this.ns.aml.vocabularies.apiBinding.binding)
     const keyBindings = this._getAmfKey(this.ns.aml.vocabularies.apiBinding.bindings)
     result = expects && expects[keyBinding] ? expects[keyBinding][0][keyBindings] : []
+
+    const endpointBindings = this.endpoint && this.endpoint[keyBinding]? this.endpoint[keyBinding][0][keyBindings] : []
+    
+    if(endpointBindings){
+      result.push({type:"endpoint",...endpointBindings[0]})
+    }
+
+    const methodBindings = this.method && this.method[keyBinding]? this.method[keyBinding][0][keyBindings] : []
+
+    if(methodBindings){
+      result.push({type:"method",...methodBindings[0]})
+    }
 
     return result
   }
