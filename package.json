@@ -30,6 +30,10 @@
     "url": "https://github.com/advanced-rest-client/api-method-documentation/issues",
     "email": "arc@mulesoft.com"
   },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
     "@advanced-rest-client/arc-icons": "^3.3.4",
     "@advanced-rest-client/arc-marked": "^1.1.1",
