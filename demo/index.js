@@ -152,6 +152,7 @@ class ComponentDemo extends ApiDemoPage {
   _apiListTemplate() {
     return [
       ['demo-api', 'Demo API'],
+      ['agents-api', 'Agents API'],
       ['jldAsync26', 'Async API 2.6'],
       ['multi-server', 'Multiple servers'],
       ['google-drive-api', 'Google Drive'],
