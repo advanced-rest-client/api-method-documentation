@@ -212,6 +212,14 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
        */
       noNavigation: { type: Boolean },
       /**
+       * When set it renders the agent parameters section
+       */
+      _agentOpened: { type: Boolean },
+      /**
+       * Computed list of agent parameters.
+       */
+      agentParameters: { type: Object },
+      /**
        * When set the base URI won't be rendered for this method.
        */
       ignoreBaseUri: { type: Boolean },
@@ -366,6 +374,8 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.renderCodeSnippets = false;
     this.deprecated = false;
     this.selectedMessage = null;
+    this.agentParameters = undefined;
+    this._agentOpened = false;
 
     this.previous = undefined;
     this.next = undefined;
@@ -463,6 +473,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.operationId = this._getValue(method, this.ns.aml.vocabularies.apiContract.operationId);
     this.callbacks = this._computeCallbacks(method);
     this.deprecated = this._computeIsDeprecated(method);
+    this.agentParameters = this._computeAgentParameters(method);
   }
 
   _computeAsyncApiSecurity(){
@@ -681,6 +692,13 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
    */
   _toggleCallbacks() {
     this.callbacksOpened = !this.callbacksOpened;
+  }
+
+  /**
+   * Toggles agent parameters section.
+   */
+  _toggleAgent() {
+    this._agentOpened = !this._agentOpened;
   }
 
   /**
@@ -1095,12 +1113,49 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       ${this._getAsyncSecurityMethodTemplate()}
       ${this._getMessagesTemplate()}
       ${this._getCodeSnippetsTemplate()}
+      ${this._getAgentTemplate()}
       ${this._getSecurityTemplate()}
       ${this._getParametersTemplate()}
       ${this._getHeadersTemplate()}
       ${this._getBodyTemplate()}
       ${this._callbacksTemplate()}
     </section>`
+  }
+
+  _getAgentTemplate() {
+    const { agentParameters } = this;
+    if (!agentParameters || Object.keys(agentParameters).length === 0) {
+      return '';
+    }
+    const { _agentOpened, compatibility } = this;
+    const label = this._computeToggleActionLabel(_agentOpened);
+    const buttonState = this._computeToggleButtonState(_agentOpened);
+    const iconClass = this._computeToggleIconClass(_agentOpened);
+    return html`<section class="agent-parameters">
+      <div
+        class="section-title-area"
+        @click="${this._toggleAgent}"
+        title="Toggle agent parameters"
+        ?opened="${_agentOpened}"
+      >
+        <div class="heading3 table-title" role="heading" aria-level="2">Agent parameters</div>
+        <div class="title-area-actions" aria-label="${buttonState}">
+          <anypoint-button class="toggle-button" ?compatibility="${compatibility}" data-toggle="agent-parameters">
+            ${label}
+            <arc-icon class="icon ${iconClass}" icon="expandMore"></arc-icon>
+          </anypoint-button>
+        </div>
+      </div>
+      <anypoint-collapse .opened="${_agentOpened}">
+        <div class="parameters-container">
+        ${Object.keys(agentParameters).map((key) => html`
+          <div class="property-item">
+            <div class="property-name">${key}: <strong>${String(agentParameters[key])}</strong></div>
+          </div>
+        `)}
+        </div>
+      </anypoint-collapse>
+    </section>`;
   }
 
   _getAsyncSecurityMethodTemplate() {
@@ -1330,6 +1385,49 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       return { name: paramName, example: paramExample };
     }
     return undefined;
+  }
+
+  _computeAgentParameters(method) {
+    if (!method) {
+      return undefined;
+    }
+
+    const expect = this._computeExpects(method);
+    if (!expect) {
+      return undefined;
+    }
+    const payloads = this._computePayload(expect);
+    if (!payloads || payloads.length === 0) {
+      return undefined;
+    }
+
+    const ramlSchemaKey = this._getAmfKey(this.ns.aml.vocabularies.shapes.schema);
+    const schema = payloads[0][ramlSchemaKey];
+    if (!schema) {
+      return undefined;
+    }
+
+    const agentObject = this._computeAgents(schema[0]);
+    if (!agentObject) {
+      return undefined;
+    }
+    const actionKey = this._getAmfKey(this.ns.aml.vocabularies.data.action);
+    const action = agentObject[0][actionKey];
+    if (!action) {
+      return undefined;
+    }
+    const isUserInputKey = this._getAmfKey(this.ns.aml.vocabularies.data.isUserInput);
+    const isUserInput = action[0][isUserInputKey];
+    if (!isUserInput) {
+      return undefined;
+    }
+    const isInputEnabled = this._getValue(isUserInput[0], this.ns.aml.vocabularies.data.value);
+
+    const params = {
+      isInputEnabled,
+    };
+
+    return params;
   }
 
   /**
