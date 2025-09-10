@@ -23,12 +23,12 @@ describe('agent-api', function() {
         amf = await AmfLoader.load(apiFile, compact);
       });
 
-      it('isInputEnabled is true', async () => {
+      it('isUserInput is true', async () => {
         const endpopint = AmfLoader.lookupEndpoint(amf, '/reservations/reservationlookup');
         const method = AmfLoader.lookupOperation(amf, '/reservations/reservationlookup', 'get');
         element = await modelFixture(amf, endpopint, method);
         await aTimeout();
-        assert.equal(element.agentParameters.isInputEnabled, 'true');
+        assert.equal(element.agentParameters.isUserInput, 'true');
       });
 
       it('renders the summary', async () => {
