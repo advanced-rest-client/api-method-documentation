@@ -473,7 +473,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     this.operationId = this._getValue(method, this.ns.aml.vocabularies.apiContract.operationId);
     this.callbacks = this._computeCallbacks(method);
     this.deprecated = this._computeIsDeprecated(method);
-    this.agentParameters = this._computeAgentParameters(method);
+    this.agentParameters = this._computeAgentParametersByMethod(method);
   }
 
   _computeAsyncApiSecurity(){
@@ -1387,7 +1387,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     return undefined;
   }
 
-  _computeAgentParameters(method) {
+  _computeAgentParametersByMethod(method) {
     if (!method) {
       return undefined;
     }
@@ -1421,10 +1421,10 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     if (!isUserInput) {
       return undefined;
     }
-    const isInputEnabled = this._getValue(isUserInput[0], this.ns.aml.vocabularies.data.value);
+    const isInputValue = this._getValue(isUserInput[0], this.ns.aml.vocabularies.data.value);
 
     const params = {
-      isInputEnabled,
+      isUserInput: isInputValue,
     };
 
     return params;
