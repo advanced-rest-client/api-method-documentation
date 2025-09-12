@@ -333,4 +333,506 @@ api-security-documentation:last-of-type {
 .async-method-security{
   margin-top: 17px;
 }
+
+/* Enhanced API Method Documentation Styles */
+
+/* Operation Summary */
+.operation-summary {
+  margin-bottom: 24px;
+}
+
+.operation-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.method-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.method-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  display: inline-block;
+}
+
+/* HTTP Method Colors */
+.method-badge.http-method-get {
+  background-color: var(--api-method-documentation-method-get-color, #61affe);
+}
+
+.method-badge.http-method-post {
+  background-color: var(--api-method-documentation-method-post-color, #49cc90);
+}
+
+.method-badge.http-method-put {
+  background-color: var(--api-method-documentation-method-put-color, #fca130);
+}
+
+.method-badge.http-method-delete {
+  background-color: var(--api-method-documentation-method-delete-color, #f93e3e);
+}
+
+.method-badge.http-method-patch {
+  background-color: var(--api-method-documentation-method-patch-color, #50e3c2);
+}
+
+.method-badge.http-method-head {
+  background-color: var(--api-method-documentation-method-head-color, #9012fe);
+}
+
+.method-badge.http-method-options {
+  background-color: var(--api-method-documentation-method-options-color, #0d5aa7);
+}
+
+/* gRPC Badge */
+.method-badge.grpc-badge {
+  background-color: var(--api-method-documentation-grpc-color, #4285f4);
+}
+
+.stream-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  background-color: var(--api-method-documentation-stream-badge-bg, #e8f0fe);
+  color: var(--api-method-documentation-stream-badge-color, #1a73e8);
+  border: 1px solid var(--api-method-documentation-stream-badge-border, #dadce0);
+}
+
+/* Enhanced Request/Response */
+.no-request-body {
+  color: var(--api-method-documentation-muted-color, #666);
+  font-style: italic;
+  margin: 8px 0;
+}
+
+.request-payload,
+.enhanced-parameters,
+.request-headers {
+  margin: 16px 0;
+}
+
+.payload-item {
+  border: 1px solid var(--api-method-documentation-border-color, #e0e0e0);
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.payload-header {
+  background-color: var(--api-method-documentation-payload-header-bg, #f5f5f5);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--api-method-documentation-border-color, #e0e0e0);
+}
+
+.media-type-badge {
+  padding: 2px 6px;
+  background-color: var(--api-method-documentation-media-type-bg, #e3f2fd);
+  color: var(--api-method-documentation-media-type-color, #1976d2);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.schema-name {
+  font-weight: 600;
+  color: var(--api-method-documentation-schema-name-color, #333);
+}
+
+/* gRPC Message Styles */
+.grpc-message {
+  padding: 12px;
+}
+
+.schema-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--api-method-documentation-schema-title-color, #333);
+}
+
+.schema-description {
+  color: var(--api-method-documentation-description-color, #666);
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.message-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.grpc-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background-color: var(--api-method-documentation-field-bg, #fafafa);
+  border-radius: 3px;
+}
+
+.field-name {
+  font-weight: 500;
+  color: var(--api-method-documentation-field-name-color, #333);
+}
+
+.field-type {
+  color: var(--api-method-documentation-field-type-color, #666);
+  font-size: 12px;
+  font-family: var(--arc-font-code-family, monospace);
+}
+
+.required-badge {
+  padding: 1px 4px;
+  background-color: var(--api-method-documentation-required-bg, #ff5722);
+  color: white;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* Enhanced Parameters */
+.parameter-group {
+  margin: 12px 0;
+}
+
+.parameter-group-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--api-method-documentation-param-group-color, #333);
+}
+
+.parameters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.parameter-item {
+  border: 1px solid var(--api-method-documentation-border-color, #e0e0e0);
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.parameter-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.parameter-name {
+  font-weight: 500;
+  color: var(--api-method-documentation-param-name-color, #333);
+}
+
+.parameter-type {
+  color: var(--api-method-documentation-param-type-color, #666);
+  font-size: 12px;
+  font-family: var(--arc-font-code-family, monospace);
+}
+
+.parameter-description {
+  color: var(--api-method-documentation-description-color, #666);
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+.parameter-default,
+.parameter-examples {
+  font-size: 12px;
+  color: var(--api-method-documentation-muted-color, #666);
+  margin: 2px 0;
+}
+
+.parameter-default code,
+.parameter-examples code {
+  background-color: var(--api-method-documentation-code-bg, #f5f5f5);
+  padding: 1px 3px;
+  border-radius: 2px;
+  font-family: var(--arc-font-code-family, monospace);
+}
+
+/* Examples */
+.payload-examples,
+.enhanced-examples {
+  margin: 16px 0;
+}
+
+.examples-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--api-method-documentation-examples-title-color, #333);
+}
+
+.example-item {
+  border: 1px solid var(--api-method-documentation-border-color, #e0e0e0);
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.example-header {
+  background-color: var(--api-method-documentation-example-header-bg, #f8f9fa);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--api-method-documentation-border-color, #e0e0e0);
+}
+
+.example-name {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--api-method-documentation-example-name-color, #333);
+}
+
+.example-content {
+  position: relative;
+}
+
+.example-content pre {
+  margin: 0;
+  padding: 12px;
+  background-color: var(--api-method-documentation-code-bg, #f8f9fa);
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.example-content code {
+  font-family: var(--arc-font-code-family, monospace);
+  color: var(--api-method-documentation-code-color, #333);
+}
+
+.show-full-example {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+/* Enhanced Security */
+.enhanced-security {
+  margin: 24px 0;
+}
+
+.security-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Enhanced Metadata */
+.enhanced-metadata {
+  margin: 24px 0;
+}
+
+.metadata-content {
+  padding: 16px;
+}
+
+.metadata-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.metadata-item.deprecated {
+  align-items: center;
+}
+
+.metadata-label {
+  font-weight: 600;
+  color: var(--api-method-documentation-metadata-label-color, #333);
+  min-width: 120px;
+}
+
+.metadata-value {
+  color: var(--api-method-documentation-metadata-value-color, #666);
+  font-family: var(--arc-font-code-family, monospace);
+  font-size: 13px;
+}
+
+.metadata-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag-badge {
+  padding: 2px 6px;
+  background-color: var(--api-method-documentation-tag-bg, #e8f5e8);
+  color: var(--api-method-documentation-tag-color, #2e7d32);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.deprecated-badge {
+  padding: 2px 6px;
+  background-color: var(--api-method-documentation-deprecated-bg, #ffebee);
+  color: var(--api-method-documentation-deprecated-color, #c62828);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--api-method-documentation-deprecated-border, #ffcdd2);
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.server-item {
+  font-family: var(--arc-font-code-family, monospace);
+  font-size: 12px;
+  color: var(--api-method-documentation-server-color, #666);
+  padding: 2px 4px;
+  background-color: var(--api-method-documentation-server-bg, #f5f5f5);
+  border-radius: 2px;
+}
+
+/* gRPC Examples Styles */
+.grpc-examples {
+  margin: 24px 0;
+}
+
+.example-section {
+  margin: 16px 0;
+}
+
+.example-snippet {
+  position: relative;
+  border: 1px solid var(--api-method-documentation-border-color, #e0e0e0);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.example-snippet pre {
+  margin: 0;
+  padding: 16px;
+  background-color: var(--api-method-documentation-code-bg, #f8f9fa);
+  overflow-x: auto;
+  font-family: var(--arc-font-code-family, 'Consolas', 'Monaco', 'Courier New', monospace);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.example-snippet code {
+  color: var(--api-method-documentation-code-color, #333);
+}
+
+.grpcurl-command pre {
+  background-color: var(--api-method-documentation-terminal-bg, #2d3748);
+}
+
+.grpcurl-command code {
+  color: var(--api-method-documentation-terminal-color, #e2e8f0);
+}
+
+.example-snippet clipboard-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  --anypoint-button-background-color: var(--api-method-documentation-copy-button-bg, #ffffff);
+  --anypoint-button-color: var(--api-method-documentation-copy-button-color, #333);
+}
+
+.server-info {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: var(--api-method-documentation-info-bg, #f0f8ff);
+  border: 1px solid var(--api-method-documentation-info-border, #b3d9ff);
+  border-radius: 4px;
+}
+
+.server-details p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.server-details strong {
+  color: var(--api-method-documentation-label-color, #333);
+}
+
+.heading4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 8px 0;
+  color: var(--api-method-documentation-heading4-color, #333);
+}
+
+/* Enhanced gRPC Badge Styles */
+.grpc-badge {
+  background: linear-gradient(135deg, #4285f4 0%, #34a853 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(66, 133, 244, 0.3);
+}
+
+.stream-badge {
+  background: linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+  color: #1a73e8;
+  border: 1px solid #dadce0;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* gRPC Message Field Enhancements */
+.grpc-field {
+  border-left: 3px solid var(--api-method-documentation-grpc-accent, #4285f4);
+}
+
+.grpc-field .field-type {
+  background-color: var(--api-method-documentation-type-bg, #f1f3f4);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .operation-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .method-badges {
+    align-self: flex-start;
+  }
+  
+  .parameter-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .metadata-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .metadata-label {
+    min-width: auto;
+  }
+  
+  .example-snippet clipboard-copy {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 8px;
+  }
+}
 `;
