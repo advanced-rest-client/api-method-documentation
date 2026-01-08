@@ -377,6 +377,8 @@ export declare class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
 
   _getTitleTemplate(): TemplateResult|string;
 
+  _isGrpcEndpoint(endpoint: any): boolean;
+
   _getUrlTemplate(): TemplateResult;
 
   _getTraitsTemplate(): TemplateResult|string;

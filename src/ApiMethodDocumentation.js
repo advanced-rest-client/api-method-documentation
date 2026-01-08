@@ -887,9 +887,14 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       methodSummary,
       operationId,
     } = this;
+    
+    // Check if it's a gRPC operation and add prefix
+    const isGrpc = this._isGrpcOperation(this.method);
+    const displayTitle = isGrpc ? `Method name: ${methodName}` : methodName;
+    
     return html`
     <div class="title-area">
-      <div role="heading" aria-level="1" class="title">${methodName}</div>
+      <div role="heading" aria-level="1" class="heading2">${displayTitle}</div>
       ${noTryIt ? '' : html`<div class="action">
         <anypoint-button
           class="action-button"
@@ -899,7 +904,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       </div>`}
     </div>
     ${methodSummary ? html`<p class="summary">${methodSummary}</p>` : ''}
-    ${operationId && !isAsyncApi ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
+    ${operationId && !isAsyncApi && !isGrpc ? html`<span class="operation-id">Operation ID: ${operationId}</span>` : ''}
     `;
   }
 
@@ -953,6 +958,10 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       return '';
     }
     if (this.isNonHttpProtocol()) {
+      return '';
+    }
+    // Don't show HTTP snippets for gRPC operations
+    if (this._isGrpcOperation(this.method)) {
       return '';
     }
     const {
@@ -1216,12 +1225,18 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       amf,
       narrow,
       compatibility,
-      graph
+      graph,
+      endpoint
     } = this;
+    
+    // For gRPC, don't show the "Responses" title, just the response document
+    const isGrpc = this._isGrpcEndpoint(endpoint);
+    
     return html`<section class="response-documentation">
-      <div class="heading2" role="heading" aria-level="1">Responses</div>
+      ${isGrpc ? '' : html`<div class="heading2" role="heading" aria-level="1">Responses</div>`}
       <api-responses-document
         .amf="${amf}"
+        .endpoint="${endpoint}"
         ?narrow="${narrow}"
         ?compatibility="${compatibility}"
         ?graph="${graph}"
@@ -1449,6 +1464,32 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
       default:
         return undefined;
     }
+  }
+
+  /**
+   * Checks if the given endpoint has gRPC operations
+   * @param {Object} endpoint The endpoint to check
+   * @returns {boolean} True if the endpoint has gRPC operations
+   */
+  _isGrpcEndpoint(endpoint) {
+    if (!endpoint) {
+      return false;
+    }
+    
+    const opKey = this._getAmfKey(this.ns.aml.vocabularies.apiContract.supportedOperation);
+    const operations = endpoint[opKey];
+    
+    if (!operations) {
+      return false;
+    }
+    
+    const operationsList = this._ensureArray(operations);
+    if (!operationsList || operationsList.length === 0) {
+      return false;
+    }
+    
+    // Check if any operation is gRPC
+    return operationsList.some(operation => this._isGrpcOperation(operation));
   }
 
   /**

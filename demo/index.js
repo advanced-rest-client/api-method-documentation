@@ -151,6 +151,7 @@ class ComponentDemo extends ApiDemoPage {
 
   _apiListTemplate() {
     return [
+      ['grpc-test', 'GRPC Test'], // removed for now
       ['demo-api', 'Demo API'],
       ['agents-api', 'Agents API'],
       ['jldAsync26', 'Async API 2.6'],
