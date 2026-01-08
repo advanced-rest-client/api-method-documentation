@@ -891,10 +891,11 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
     // Check if it's a gRPC operation and add prefix
     const isGrpc = this._isGrpcOperation(this.method);
     const displayTitle = isGrpc ? `Method name: ${methodName}` : methodName;
+    const titleClass = isGrpc ? 'heading2' : 'title';
     
     return html`
     <div class="title-area">
-      <div role="heading" aria-level="1" class="heading2">${displayTitle}</div>
+      <div role="heading" aria-level="1" class="${titleClass}">${displayTitle}</div>
       ${noTryIt ? '' : html`<div class="action">
         <anypoint-button
           class="action-button"
