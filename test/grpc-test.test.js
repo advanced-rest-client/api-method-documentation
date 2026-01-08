@@ -12,41 +12,6 @@ describe('gRPC API rendering', function() {
 
   const apiFile = 'grpc-test';
 
-  // Helper to find gRPC endpoint by name instead of path
-  function lookupEndpointByName(model, name) {
-    const webApi = AmfLoader.getEncodes(model);
-    const endpoints = webApi['http://a.ml/vocabularies/apiContract#endpoint'];
-    if (!endpoints) {
-      return null;
-    }
-    const endpointArray = Array.isArray(endpoints) ? endpoints : [endpoints];
-    return endpointArray.find(endpoint => {
-      const names = endpoint['http://a.ml/vocabularies/core#name'];
-      if (!names) {
-        return false;
-      }
-      const nameArray = Array.isArray(names) ? names : [names];
-      return nameArray.some(n => n['@value'] === name);
-    });
-  }
-
-  // Helper to find operation within an endpoint
-  function lookupOperationInEndpoint(endpoint, methodName) {
-    const operations = endpoint['http://a.ml/vocabularies/apiContract#supportedOperation'];
-    if (!operations) {
-      return null;
-    }
-    const opsArray = Array.isArray(operations) ? operations : [operations];
-    return opsArray.find(op => {
-      const methods = op['http://a.ml/vocabularies/apiContract#method'];
-      if (!methods) {
-        return false;
-      }
-      const methodArray = Array.isArray(methods) ? methods : [methods];
-      return methodArray.some(m => m['@value'] === methodName);
-    });
-  }
-
   [
     ['Compact model', false],
     ['Regular model', true]
@@ -59,8 +24,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('renders method title with "Method name:" prefix for gRPC', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'post');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'post');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const titleNode = element.shadowRoot.querySelector('.heading2');
@@ -70,8 +35,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('uses heading2 class for gRPC method title', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'post');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'post');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const titleNode = element.shadowRoot.querySelector('.heading2');
@@ -81,8 +46,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('hides operation ID for gRPC', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'post');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'post');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const operationIdNode = element.shadowRoot.querySelector('.operation-id');
@@ -90,8 +55,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('hides code snippets for gRPC', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'post');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'post');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const snippetsNode = element.shadowRoot.querySelector('http-code-snippets');
@@ -99,8 +64,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('renders api-url component for gRPC', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'post');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'post');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const urlNode = element.shadowRoot.querySelector('api-url');
@@ -108,8 +73,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('detects gRPC operation correctly (post method)', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'post');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'post');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const isGrpc = element._isGrpcOperation(element.method);
@@ -117,8 +82,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('detects gRPC operation correctly (publish method)', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'publish');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'publish');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const isGrpc = element._isGrpcOperation(element.method);
@@ -126,8 +91,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('detects gRPC operation correctly (subscribe method)', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'subscribe');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'subscribe');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const isGrpc = element._isGrpcOperation(element.method);
@@ -135,8 +100,8 @@ describe('gRPC API rendering', function() {
       });
 
       it('detects gRPC operation correctly (pubsub method)', async () => {
-        const endpoint = lookupEndpointByName(amf, 'Greeter');
-        const method = lookupOperationInEndpoint(endpoint, 'pubsub');
+        const endpoint = AmfLoader.lookupEndpointByName(amf, 'Greeter');
+        const method = AmfLoader.lookupOperationInEndpoint(endpoint, 'pubsub');
         element = await modelFixture(amf, endpoint, method);
         await aTimeout();
         const isGrpc = element._isGrpcOperation(element.method);

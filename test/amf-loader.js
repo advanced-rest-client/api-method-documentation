@@ -73,3 +73,23 @@ AmfLoader.getParamName = model => {
   helper.amf = model;
   return helper._getValue(model, helper.ns.aml.vocabularies.apiContract.paramName);
 }
+
+AmfLoader.lookupEndpointByName = (model, name) => {
+  helper.amf = model;
+  const webApi = helper._computeApi(model);
+  const endpointKey = helper._getAmfKey(helper.ns.aml.vocabularies.apiContract.endpoint);
+  const endpoints = helper._ensureArray(webApi[endpointKey]);
+  return endpoints.find(endpoint => {
+    const endpointName = helper._getValue(endpoint, helper.ns.aml.vocabularies.core.name);
+    return endpointName === name;
+  });
+}
+
+AmfLoader.lookupOperationInEndpoint = (endpoint, methodName) => {
+  const opKey = helper._getAmfKey(helper.ns.aml.vocabularies.apiContract.supportedOperation);
+  const ops = helper._ensureArray(endpoint[opKey]);
+  return ops.find(op => {
+    const method = helper._getValue(op, helper.ns.aml.vocabularies.apiContract.method);
+    return method === methodName;
+  });
+}
