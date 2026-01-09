@@ -596,14 +596,15 @@ describe('<api-method-documentation>', () => {
         it('Computes example for XML value', () => {
           const payload = AmfLoader.lookupPayload(amf, '/people', 'post');
           const result = element._computeSnippetsPayload(payload[1]);
-          assert.equal(result,
-            '<?xml version="1.0" encoding="UTF-8"?>\n<resource error="false" type="AppPerson">\n  ' +
+          const expected = '<?xml version="1.0" encoding="UTF-8"?>\n<resource error="false" type="AppPerson">\n  ' +
             '<id>Qawer63J73HJ6khjswuqyq62382jG21s</id>\n  <name>John Smith</name>\n  ' +
             '<birthday>1990-10-12</birthday>\n  <gender>male</gender>\n  ' +
             '<url>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s</url>\n  <image>\n    ' +
             '<url>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s/image</url>\n    ' +
             '<thumb>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s/image/thumb</thumb>\n  ' +
-            '</image>\n  <tagline>Hi, I\'m John!</tagline>\n  <language>en_US</language>\n</resource>\n');
+            '</image>\n  <tagline>Hi, I\'m John!</tagline>\n  <language>en_US</language>\n</resource>\n';
+          // Normalize line endings for cross-platform compatibility
+          assert.equal(result.replace(/\r\n/g, '\n'), expected.replace(/\r\n/g, '\n'));
         });
 
         it('Uses application/json as default media type', () => {
