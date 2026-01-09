@@ -51,7 +51,7 @@
     "@api-components/api-example-generator": "^4.4.8",
     "@api-components/api-headers-document": "^4.2.4",
     "@api-components/api-parameters-document": "^4.1.1",
-    "@api-components/api-responses-document": "^4.2.5",
+    "@api-components/api-responses-document": "^4.2.6",
     "@api-components/api-security-documentation": "^4.1.0",
     "@api-components/http-method-label": "^3.1.4",
     "lit-element": "^2.4.0",
