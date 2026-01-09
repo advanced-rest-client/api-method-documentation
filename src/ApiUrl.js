@@ -231,8 +231,19 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     if (!method) {
       return html``;
     }
-    const lowerCase = method.toLowerCase();
-    return html`<div class="method-value"><span class="method-label" data-method="${lowerCase}">${method}</span></div>`
+    
+    // Check if it's gRPC and get appropriate display method and color
+    const isGrpc = this._isGrpcOperation(this._operation);
+    let displayMethod = method;
+    let methodForColor = method.toLowerCase();
+    
+    if (isGrpc) {
+      const streamType = this._getGrpcStreamType(this._operation);
+      displayMethod = this._getGrpcStreamTypeDisplayName(streamType);
+      methodForColor = this._getMethodForColor(streamType);
+    }
+    
+    return html`<div class="method-value"><span class="method-label" data-method="${methodForColor}">${displayMethod}</span></div>`
   }
 
   _getPathTemplate() {
@@ -350,5 +361,107 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
         }
       })
     );
+  }
+
+  // ========== gRPC Support Methods ==========
+
+  /**
+   * Checks if the given operation is a gRPC operation
+   * @param {Object} operation Operation model
+   * @return {boolean}
+   */
+  _isGrpcOperation(operation) {
+    if (!operation) {
+      return false;
+    }
+    
+    // Check for gRPC-specific methods
+    const method = this._getValue(operation, this.ns.aml.vocabularies.apiContract.method);
+    if (method && typeof method === 'string' && ['publish', 'subscribe', 'pubsub'].includes(method.toLowerCase())) {
+      return true;
+    }
+    
+    // Check for gRPC media type in request
+    const expects = this._computeExpects(operation);
+    if (expects) {
+      const payloadKey = this._getAmfKey(this.ns.aml.vocabularies.apiContract.payload);
+      const payloads = this._ensureArray(expects[payloadKey]);
+      
+      if (payloads && payloads.length > 0) {
+        const mediaType = this._getValue(payloads[0], this.ns.aml.vocabularies.core.mediaType);
+        if (mediaType && typeof mediaType === 'string' && 
+            (mediaType === 'application/grpc' || mediaType === 'application/grpc+proto')) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Gets the gRPC stream type for an operation
+   * @param {Object} operation Operation model
+   * @return {string} Stream type: 'unary', 'client_streaming', 'server_streaming', or 'bidi_streaming'
+   */
+  _getGrpcStreamType(operation) {
+    if (!operation) {
+      return 'unary';
+    }
+    
+    const method = this._getValue(operation, this.ns.aml.vocabularies.apiContract.method);
+    
+    if (!method || typeof method !== 'string') {
+      return 'unary';
+    }
+    
+    // Map methods to gRPC stream types
+    const methodLower = method.toLowerCase();
+    switch (methodLower) {
+      case 'publish':
+        return 'client_streaming';
+      case 'subscribe':
+        return 'server_streaming';
+      case 'pubsub':
+        return 'bidi_streaming';
+      case 'post':
+      case 'get':
+      default:
+        return 'unary';
+    }
+  }
+
+  /**
+   * Gets the display name for a gRPC stream type
+   * @param {string} streamType Stream type
+   * @return {string} Display name
+   */
+  _getGrpcStreamTypeDisplayName(streamType) {
+    const displayNames = {
+      'unary': 'Unary',
+      'client_streaming': 'Client',
+      'server_streaming': 'Server',
+      'bidi_streaming': 'Bidirectional'
+    };
+    
+    return displayNames[streamType] || streamType;
+  }
+
+  /**
+   * Gets the HTTP method name to use for color styling based on gRPC stream type
+   * @param {string} streamType gRPC stream type
+   * @return {string} HTTP method name for color styling
+   */
+  _getMethodForColor(streamType) {
+    // Map stream type to HTTP method for consistent colors
+    // patch = purple, publish = green, subscribe = blue, options = gray
+    const colorMethodMap = {
+      'unary': 'patch',              // Purple: rgb(156, 39, 176)
+      'client_streaming': 'publish',  // Green: #1f9d55
+      'server_streaming': 'subscribe', // Blue: #3490dc
+      'bidi_streaming': 'options'     // Gray (default/neutral color)
+    };
+    
+    return colorMethodMap[streamType] || 'patch';
   }
 }

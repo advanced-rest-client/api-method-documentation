@@ -90,4 +90,32 @@ export declare class ApiUrl extends AmfHelperMixin(LitElement) {
   _computeMethod(operation: any): string|undefined;
 
   _dispatchChangeEvent(): void;
+
+  /**
+   * Checks if the given operation is a gRPC operation
+   * @param operation Operation model
+   * @returns True if it's a gRPC operation
+   */
+  _isGrpcOperation(operation: any): boolean;
+
+  /**
+   * Gets the gRPC stream type for an operation
+   * @param operation Operation model
+   * @returns Stream type: 'unary', 'client_streaming', 'server_streaming', or 'bidi_streaming'
+   */
+  _getGrpcStreamType(operation: any): string;
+
+  /**
+   * Gets the display name for a gRPC stream type
+   * @param streamType Stream type
+   * @returns Display name
+   */
+  _getGrpcStreamTypeDisplayName(streamType: string): string;
+
+  /**
+   * Gets the HTTP method name to use for color styling based on gRPC stream type
+   * @param streamType gRPC stream type
+   * @returns HTTP method name for color styling
+   */
+  _getMethodForColor(streamType: string): string;
 }

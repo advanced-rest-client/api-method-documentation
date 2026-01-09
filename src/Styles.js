@@ -20,14 +20,15 @@ export default css`
 }
 
 .heading2 {
-  font-family: var(--api-method-documentation-h2-font-family, var(--arc-font-title-font-family));
-  font-size: var(--api-method-documentation-h2-font-size, var(--arc-font-title-font-size));
-  font-weight: var(--api-method-documentation-h2-font-weight, var(--arc-font-title-font-weight));
-  line-height: var(--api-method-documentation-h2-line-height, var(--arc-font-title-line-height));
-  color: var(--api-method-documentation-h2-font-color, var(--arc-font-title-color));
+  flex: 1;
+  font-family: var(--api-method-documentation-h2-font-family, var(--arc-font-subhead-font-family));
+  color: var(--api-method-documentation-h2-font-color, var(--arc-font-subhead-color));
+  font-size: var(--api-method-documentation-h2-font-size, 1.25rem) !important;
+  font-weight: var(--api-method-documentation-h2-font-weight, var(--arc-font-subhead-font-weight));
+  line-height: var(--api-method-documentation-h2-line-height, var(--arc-font-subhead-line-height));
   margin: 0.84em 0;
 }
-
+  
 .heading3 {
   flex: 1;
   font-family: var(--api-method-documentation-h3-font-family, var(--arc-font-subhead-font-family));
