@@ -122,6 +122,12 @@ describe('<api-url>', () => {
 		it('should compute method', () => {
 		  assert.equal(element._method, 'PUBLISH');
 		});
+
+		it('should render PUBLISH as the displayed method label', async () => {
+		  await waitUntil(() => element.shadowRoot.querySelector('.method-label'));
+		  const label = element.shadowRoot.querySelector('.method-label');
+		  assert.equal(label.textContent.trim(), 'PUBLISH');
+		});
 	  });
 
 		describe('APIC-560', () => {
@@ -157,6 +163,12 @@ describe('<api-url>', () => {
 				const expectedServer = 'production'
 				await waitUntil(() => element.shadowRoot.querySelector('.async-server-name'));
 				assert.equal(element.shadowRoot.querySelector('.async-server-name').textContent, expectedServer);
+			});
+
+			it('should render SUBSCRIBE as the displayed method label', async () => {
+				await waitUntil(() => element.shadowRoot.querySelector('.method-label'));
+				const label = element.shadowRoot.querySelector('.method-label');
+				assert.equal(label.textContent.trim(), 'SUBSCRIBE');
 			});
 
 			it('should only render url value when no operation selected', async () => {
