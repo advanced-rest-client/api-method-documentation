@@ -235,7 +235,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     // Check if it's gRPC and get appropriate display method and color
     const isGrpc = this._isGrpcOperation(this._operation);
     let displayMethod = method;
-    let methodForColor = method.toLowerCase();
+    let methodForColor = this._operationColorMethod(method.toLowerCase());
     
     if (isGrpc) {
       const streamType = this._getGrpcStreamType(this._operation);
@@ -340,8 +340,7 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
    * @return {String|undefined} HTTP method name
    */
   _computeMethod(operation) {
-    const methodKey = this.ns.aml.vocabularies.apiContract.method;
-    let name = /** @type string */ (this._getValue(operation, methodKey));
+    let name = /** @type string */ (this._computeOperationMethod(operation));
     if (name) {
       name = name.toUpperCase();
     }

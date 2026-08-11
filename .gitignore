@@ -61,6 +61,10 @@ coverage
 /demo/*.json
 !demo/apis.json
 !demo/grpc-test.json
+!demo/async30.json
+!demo/async30-compact.json
+!demo/async31.json
+!demo/async31-compact.json
 
 .idea
 .codegenie
