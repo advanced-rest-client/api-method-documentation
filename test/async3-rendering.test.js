@@ -27,9 +27,12 @@ describe('AsyncAPI 3.0 operation rendering (method documentation)', () => {
 
   it('labels the async op SEND and colors it publish', async () => {
     const element = await load();
-    const badge = element.shadowRoot.querySelector('.method-label');
-    // ApiUrl renders the badge; may be inside a nested api-url element's shadow root.
-    assert.exists(badge || element.shadowRoot.querySelector('api-url'), 'no method badge');
+    // The badge is rendered by the nested api-url element, inside its own shadow root.
+    const apiUrl = element.shadowRoot.querySelector('api-url');
+    const badge = apiUrl && apiUrl.shadowRoot.querySelector('.method-label');
+    assert.exists(badge, 'no method badge found in nested api-url shadow root');
+    assert.equal(badge.textContent.trim().toLowerCase(), 'send');
+    assert.equal(badge.getAttribute('data-method'), 'publish');
   });
 
   it('discovers and renders the message payload', async () => {
