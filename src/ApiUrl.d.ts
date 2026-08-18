@@ -63,7 +63,17 @@ export declare class ApiUrl extends AmfHelperMixin(LitElement) {
 
   get path(): string;
 
+  /**
+   * The webhook event name to display in place of a URL (OAS 3.1/3.2).
+   */
+  get webhookEventName(): string;
+
   get url(): string;
+
+  /**
+   * Whether the current operation is an OAS 3.1/3.2 top-level webhook.
+   */
+  get isWebhook(): boolean;
 
   render(): TemplateResult;
 
