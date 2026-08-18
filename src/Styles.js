@@ -190,6 +190,15 @@ arc-marked {
   min-width: var(--api-method-documentation-http-method-label-min-width, inherit);
 }
 
+.method-label[data-method='query'],
+.method-label[data-method='QUERY'] {
+  background-color: var(
+    --http-method-label-query-background-color,
+    rgba(15, 157, 157, 0.12)
+  );
+  color: var(--http-method-label-query-color, #0f9d9d);
+}
+
 .bottom-nav,
 .bottom-link {
   display: flex;
