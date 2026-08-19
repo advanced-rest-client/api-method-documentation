@@ -224,4 +224,46 @@ describe('<api-url>', () => {
 	  assert.equal(label.textContent.trim(), 'QUERY');
 	});
   });
+
+  ['COPY', 'MOVE'].forEach((verb) => {
+	describe(`${verb} method (OAS 3.2)`, () => {
+	  // OAS 3.2 also adds the COPY and MOVE HTTP methods. Same casing contract
+	  // as QUERY: displayed upper case, color hook lower-cased. Inline expanded
+	  // operation keeps this independent of the model generator.
+	  const METHOD = 'http://a.ml/vocabularies/apiContract#method';
+	  const OPERATION_T = 'http://a.ml/vocabularies/apiContract#Operation';
+
+	  let element;
+
+	  beforeEach(async () => {
+		element = await operationFixture({
+		  operation: {
+			'@id': 'amf://id#12',
+			'@type': [OPERATION_T],
+			[METHOD]: [{ '@value': verb }],
+		  },
+		});
+		await nextFrame();
+	  });
+
+	  it('computes the method in upper case', () => {
+		assert.equal(element._method, verb);
+	  });
+
+	  it('renders the method label with the lower-cased color hook', () => {
+		const label = element.shadowRoot.querySelector('.method-label');
+		assert.exists(label, 'the method label is rendered');
+		assert.equal(
+		  label.getAttribute('data-method'),
+		  verb.toLowerCase(),
+		  'color hook is lower-cased'
+		);
+	  });
+
+	  it('displays the method name in upper case', () => {
+		const label = element.shadowRoot.querySelector('.method-label');
+		assert.equal(label.textContent.trim(), verb);
+	  });
+	});
+  });
 });
