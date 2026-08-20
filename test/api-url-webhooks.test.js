@@ -1,4 +1,5 @@
 import { fixture, assert, nextFrame, html } from '@open-wc/testing';
+import { AmfLoader } from './amf-loader.js';
 import '../api-url.js';
 
 /**
@@ -8,58 +9,13 @@ import '../api-url.js';
  * distinction is that the WebAPI root references it via `apiContract#webhooks`
  * instead of `apiContract#endpoint`.
  *
- * The model is built inline (expanded AMF, no `@context`) so these tests do not
- * depend on the model generator — the webhook demo fixture is git-ignored.
+ * These tests drive the REAL generated model (`demo/oas31-webhooks`, from
+ * `demo/oas31-webhooks/oas31-webhooks.yaml`) rather than hand-built AMF, so a
+ * generator/mixin change to the `apiContract#webhooks` predicate fails here
+ * instead of silently passing an inline fixture. The demo model is a git-ignored
+ * `prepare` artifact — regenerate it with `npm run prepare`.
  */
 describe('<api-url> webhooks (OAS 3.1/3.2)', () => {
-  const DOC = 'http://a.ml/vocabularies/document#Document';
-  const ENCODES = 'http://a.ml/vocabularies/document#encodes';
-  const WEBAPI = 'http://a.ml/vocabularies/apiContract#WebAPI';
-  const ENDPOINT = 'http://a.ml/vocabularies/apiContract#endpoint';
-  const WEBHOOKS = 'http://a.ml/vocabularies/apiContract#webhooks';
-  const ENDPOINT_T = 'http://a.ml/vocabularies/apiContract#EndPoint';
-  const OPERATION_T = 'http://a.ml/vocabularies/apiContract#Operation';
-  const SUPPORTED_OP = 'http://a.ml/vocabularies/apiContract#supportedOperation';
-  const PATH = 'http://a.ml/vocabularies/apiContract#path';
-  const METHOD = 'http://a.ml/vocabularies/apiContract#method';
-  const NAME = 'http://a.ml/vocabularies/core#name';
-
-  function buildModel() {
-    return {
-      '@type': [DOC],
-      [ENCODES]: [{
-        '@id': 'amf://id#1',
-        '@type': [WEBAPI],
-        [ENDPOINT]: [{
-          '@id': 'amf://id#10',
-          '@type': [ENDPOINT_T],
-          [PATH]: [{ '@value': '/pets' }],
-          [SUPPORTED_OP]: [{
-            '@id': 'amf://id#11',
-            '@type': [OPERATION_T],
-            [METHOD]: [{ '@value': 'get' }],
-          }],
-        }],
-        [WEBHOOKS]: [{
-          '@id': 'amf://id#20',
-          '@type': [ENDPOINT_T],
-          [PATH]: [{ '@value': 'newPet' }],
-          [NAME]: [{ '@value': 'newPet' }],
-          [SUPPORTED_OP]: [{
-            '@id': 'amf://id#21',
-            '@type': [OPERATION_T],
-            [METHOD]: [{ '@value': 'post' }],
-          }],
-        }],
-      }],
-    };
-  }
-
-  function webApiOf(model) {
-    const enc = model[ENCODES][0];
-    return enc;
-  }
-
   async function operationFixture({ amf, endpoint, operation }) {
     const el = await fixture(html`<api-url
       .amf="${amf}"
@@ -70,53 +26,66 @@ describe('<api-url> webhooks (OAS 3.1/3.2)', () => {
     return el;
   }
 
-  let model;
-  let webhookEndpoint;
-  let webhookOperation;
-  let restEndpoint;
-  let restOperation;
+  [true, false].forEach((compact) => {
+    describe(`${compact ? 'compact' : 'full'} model`, () => {
+      let amf;
+      let webhookEndpoint;
+      let webhookOperation;
+      let restEndpoint;
+      let restOperation;
 
-  beforeEach(() => {
-    model = buildModel();
-    const webApi = webApiOf(model);
-    webhookEndpoint = webApi[WEBHOOKS][0];
-    webhookOperation = webhookEndpoint[SUPPORTED_OP][0];
-    restEndpoint = webApi[ENDPOINT][0];
-    restOperation = restEndpoint[SUPPORTED_OP][0];
-  });
+      before(async () => {
+        amf = await AmfLoader.load('oas31-webhooks', compact);
+      });
 
-  it('flags a webhook operation via isWebhook', async () => {
-    const el = await operationFixture({ amf: model, endpoint: webhookEndpoint, operation: webhookOperation });
-    assert.isTrue(el.isWebhook, 'isWebhook is true for a top-level webhook op');
-  });
+      beforeEach(() => {
+        webhookEndpoint = AmfLoader.lookupWebhook(amf, 'newPet');
+        webhookOperation = AmfLoader.lookupOperationInEndpoint(webhookEndpoint, 'post');
+        restEndpoint = AmfLoader.lookupEndpoint(amf, '/pets');
+        restOperation = AmfLoader.lookupOperationInEndpoint(restEndpoint, 'get');
+      });
 
-  it('does not flag a regular endpoint operation as a webhook', async () => {
-    const el = await operationFixture({ amf: model, endpoint: restEndpoint, operation: restOperation });
-    assert.isFalse(el.isWebhook, 'isWebhook is false for a REST op');
-  });
+      it('resolves the webhook from the generated model', () => {
+        assert.ok(webhookEndpoint, 'the newPet webhook endpoint is resolved');
+        assert.ok(webhookOperation, 'the webhook post operation is resolved');
+        assert.ok(restEndpoint, 'the /pets endpoint is resolved');
+        assert.ok(restOperation, 'the /pets get operation is resolved');
+      });
 
-  it('computes the webhook event name from the endpoint', async () => {
-    const el = await operationFixture({ amf: model, endpoint: webhookEndpoint, operation: webhookOperation });
-    assert.equal(el.webhookEventName, 'newPet');
-  });
+      it('flags a webhook operation via isWebhook', async () => {
+        const el = await operationFixture({ amf, endpoint: webhookEndpoint, operation: webhookOperation });
+        assert.isTrue(el.isWebhook, 'isWebhook is true for a top-level webhook op');
+      });
 
-  it('renders the event name instead of a URL for a webhook', async () => {
-    const el = await operationFixture({ amf: model, endpoint: webhookEndpoint, operation: webhookOperation });
-    const label = el.shadowRoot.querySelector('.url-server-value .server-url');
-    assert.ok(label, 'the labelled row is rendered');
-    assert.equal(label.textContent.trim(), 'Event', 'label reads "Event", not "Server"');
-    assert.include(el.shadowRoot.querySelector('.url-server-value').textContent, 'newPet', 'event name is shown');
-  });
+      it('does not flag a regular endpoint operation as a webhook', async () => {
+        const el = await operationFixture({ amf, endpoint: restEndpoint, operation: restOperation });
+        assert.isFalse(el.isWebhook, 'isWebhook is false for a REST op');
+      });
 
-  it('does not render an endpoint path row for a webhook', async () => {
-    const el = await operationFixture({ amf: model, endpoint: webhookEndpoint, operation: webhookOperation });
-    assert.isNull(el.shadowRoot.querySelector('.url-channel-value'), 'no channel/path row for a webhook');
-  });
+      it('computes the webhook event name from the endpoint', async () => {
+        const el = await operationFixture({ amf, endpoint: webhookEndpoint, operation: webhookOperation });
+        assert.equal(el.webhookEventName, 'newPet');
+      });
 
-  it('still renders the normal URL for a regular endpoint (no webhook suppression)', async () => {
-    const el = await operationFixture({ amf: model, endpoint: restEndpoint, operation: restOperation });
-    assert.isFalse(el.isWebhook);
-    const label = el.shadowRoot.querySelector('.url-server-value .server-url');
-    assert.isNull(label, 'no "Event" row for a REST endpoint');
+      it('renders the event name instead of a URL for a webhook', async () => {
+        const el = await operationFixture({ amf, endpoint: webhookEndpoint, operation: webhookOperation });
+        const label = el.shadowRoot.querySelector('.url-server-value .server-url');
+        assert.ok(label, 'the labelled row is rendered');
+        assert.equal(label.textContent.trim(), 'Event', 'label reads "Event", not "Server"');
+        assert.include(el.shadowRoot.querySelector('.url-server-value').textContent, 'newPet', 'event name is shown');
+      });
+
+      it('does not render an endpoint path row for a webhook', async () => {
+        const el = await operationFixture({ amf, endpoint: webhookEndpoint, operation: webhookOperation });
+        assert.isNull(el.shadowRoot.querySelector('.url-channel-value'), 'no channel/path row for a webhook');
+      });
+
+      it('still renders the normal URL for a regular endpoint (no webhook suppression)', async () => {
+        const el = await operationFixture({ amf, endpoint: restEndpoint, operation: restOperation });
+        assert.isFalse(el.isWebhook);
+        const label = el.shadowRoot.querySelector('.url-server-value .server-url');
+        assert.isNull(label, 'no "Event" row for a REST endpoint');
+      });
+    });
   });
 });

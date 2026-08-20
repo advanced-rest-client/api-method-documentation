@@ -19,5 +19,6 @@
   "APIC-758/APIC-758.yaml": "OAS 3.0",
   "streetlights/streetlights.yaml": "ASYNC 2.0",
   "W-11383870/W-11383870.json": { "type": "OAS 3.0", "mime": "application/json" },
-  "agents-api/agents-api.yaml": { "type": "OAS 3.0", "mime": "application/yaml" }
+  "agents-api/agents-api.yaml": { "type": "OAS 3.0", "mime": "application/yaml" },
+  "oas31-webhooks/oas31-webhooks.yaml": { "type": "OAS 3.1", "mime": "application/yaml" }
 }
