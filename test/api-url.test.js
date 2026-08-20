@@ -185,27 +185,23 @@ describe('<api-url>', () => {
 	});
   });
 
-  describe('QUERY method (OAS 3.2)', () => {
-	// OAS 3.2 adds the QUERY HTTP method. `_computeMethod` upper-cases the raw
-	// AMF value for display ("QUERY"), and `_getMethodTemplate` lower-cases it
-	// for the color hook (`data-method="query"`). The color override keys on
-	// both casings. Inline expanded operation (no `@context`) keeps this
-	// independent of the model generator.
-	const METHOD = 'http://a.ml/vocabularies/apiContract#method';
-	const OPERATION_T = 'http://a.ml/vocabularies/apiContract#Operation';
-
-	function buildQueryOperation() {
-	  return {
-		'@id': 'amf://id#12',
-		'@type': [OPERATION_T],
-		[METHOD]: [{ '@value': 'QUERY' }],
-	  };
-	}
-
+  describe('QUERY method (from a real generated OAS 3.2 model)', () => {
+	// OAS 3.2 adds the QUERY HTTP method. amf-client-js 5.11 PARSES `query:` from
+	// an OAS 3.2 pathItem and emits its method as "QUERY" (upper case), so the
+	// QUERY label is driven from a real generated model —
+	// demo/oas32-query/oas32-query.yaml — not hand-built AMF. `_computeMethod`
+	// keeps the raw upper-case value for display and the color hook is
+	// lower-cased to `data-method="query"`.
+	let amf;
 	let element;
 
+	before(async () => {
+	  amf = await AmfLoader.load('oas32-query', true);
+	});
+
 	beforeEach(async () => {
-	  element = await operationFixture({ operation: buildQueryOperation() });
+	  const [endpoint, operation] = AmfLoader.lookupEndpointOperation(amf, '/pets', 'QUERY');
+	  element = await operationFixture({ amf, endpoint, operation });
 	  await nextFrame();
 	});
 

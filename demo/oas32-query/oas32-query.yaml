@@ -1,0 +1,55 @@
+openapi: 3.2.0
+info:
+  title: OAS 3.2 QUERY method
+  version: 1.0.0
+paths:
+  /pets:
+    # `query` is a Path Item Object fixed field (sibling to get/post/etc.),
+    # added in OAS 3.2.0 for the QUERY HTTP method (a safe/idempotent method
+    # that carries a request body). amf-client-js 5.11 parses it as a real
+    # operation, which is what the QUERY method-label test drives from.
+    query:
+      operationId: queryPets
+      summary: Search pets using a structured filter body
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kind:
+                  type: string
+                maxAge:
+                  type: integer
+      responses:
+        "200":
+          description: Matching pets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+    get:
+      operationId: listPets
+      summary: List pets (contrast operation for the QUERY label test)
+      responses:
+        "200":
+          description: All pets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
