@@ -169,6 +169,7 @@ class ComponentDemo extends ApiDemoPage {
       ['APIC-650', 'APIC-650'],
       ['multiple-messages', 'multiple-messages'],
       ['streetlights', 'streetlights'],
+      ['oas31-webhooks', 'OAS 3.1 webhooks'],
     ].map(([file, label]) => html`
       <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
       <anypoint-item data-src="${file}.json">${label}</anypoint-item>

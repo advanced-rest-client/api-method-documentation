@@ -8,6 +8,23 @@ window.customElements.define('helper-element', HelperElement);
 
 const helper = new HelperElement();
 
+/**
+ * amf-client-js 5.11.x emits models in flattened `@graph` form
+ * (`{"@graph":[...]}`), whereas 4.7 emitted a plain array (`[{...}]`). The
+ * `amf` setter expands them internally (via AmfHelperMixin `_expand`), but the
+ * raw `@graph` model handed to the `_compute*` helpers is not navigable —
+ * `_computeApi` returns `undefined`. We expand at load time so every consumer
+ * (helpers and component fixtures) receives a navigable model. Re-feeding an
+ * already-expanded model to the setter is idempotent.
+ * @param {any} model Raw (possibly flattened `@graph`) API model.
+ * @return {any} Expanded model.
+ */
+const expand = (model) => {
+  helper.amf = model;
+  const { amf } = helper;
+  return Array.isArray(amf) ? amf[0] : amf;
+};
+
 AmfLoader.load = async (fileName, compact) => {
   const compactValue = compact ? '-compact' : '';
   const file = `${fileName}${compactValue}.json`;
@@ -25,7 +42,7 @@ AmfLoader.load = async (fileName, compact) => {
         /* istanbul ignore next */
         return;
       }
-      resolve(data);
+      resolve(expand(data));
     });
     /* istanbul ignore next */
     xhr.addEventListener('error',
@@ -91,5 +108,34 @@ AmfLoader.lookupOperationInEndpoint = (endpoint, methodName) => {
   return ops.find(op => {
     const method = helper._getValue(op, helper.ns.aml.vocabularies.apiContract.method);
     return method === methodName;
+  });
+}
+
+/**
+ * Returns the top-level OAS 3.1/3.2 webhook endpoints from the API model.
+ * @param {any} model Api model.
+ * @return {any[]} Array of webhook endpoint nodes (possibly empty).
+ */
+AmfLoader.lookupWebhooks = (model) => {
+  helper.amf = model;
+  const webApi = helper._computeApi(model);
+  return helper._computeWebhooks(webApi);
+}
+
+/**
+ * Returns a single webhook endpoint by its event name (the OAS `webhooks:` map
+ * key). AMF carries the key on the endpoint node as `core#name` and/or
+ * `apiContract#path`, mirroring the component's `webhookEventName` getter
+ * (name first, then path), so match on either.
+ * @param {any} model Api model.
+ * @param {string} name Webhook event name.
+ * @return {any|undefined} The webhook endpoint node.
+ */
+AmfLoader.lookupWebhook = (model, name) => {
+  const webhooks = AmfLoader.lookupWebhooks(model);
+  return webhooks.find(webhook => {
+    const eventName = helper._getValue(webhook, helper.ns.aml.vocabularies.core.name);
+    const path = helper._getValue(webhook, helper.ns.aml.vocabularies.apiContract.path);
+    return eventName === name || path === name;
   });
 }

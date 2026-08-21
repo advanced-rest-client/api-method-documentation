@@ -160,8 +160,63 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
     return '';
   }
 
+  /**
+   * The webhook event name to display in place of a URL. This is the OAS
+   * `webhooks:` map key, carried on the endpoint node as `core#name` and
+   * falling back to `apiContract#path` when a name is absent.
+   * @returns {string}
+   */
+  get webhookEventName() {
+    const { endpoint } = this;
+    if (!endpoint) {
+      return '';
+    }
+    const name = this._getValue(endpoint, this.ns.aml.vocabularies.core.name);
+    return name || this.path || '';
+  }
+
   get url() {
     return this._url || this.baseUri;
+  }
+
+  /**
+   * Whether the current operation is an OAS 3.1/3.2 top-level webhook.
+   * Webhooks compile to `apiContract#EndPoint` nodes byte-identical to regular
+   * endpoints; the only distinction is that the WebAPI root references them via
+   * `apiContract#webhooks` instead of `apiContract#endpoint`. A webhook has no
+   * invokable URL, so the URL/server area is replaced by the event name.
+   * @returns {boolean}
+   */
+  get isWebhook() {
+    const { _operation } = this;
+    if (!_operation) {
+      return false;
+    }
+    // Guard the mixin method at the package boundary: the shared
+    // amf-helper-mixin is versioned independently and `_computeWebhooks` only
+    // exists in webhook-aware builds. Mirrors the gRPC fork's guards in
+    // api-navigation (`typeof this._isGrpcApi === 'function'`).
+    if (typeof this._computeWebhooks !== 'function') {
+      return false;
+    }
+    let { amf } = this;
+    if (!amf) {
+      return false;
+    }
+    if (Array.isArray(amf)) {
+      [amf] = amf;
+    }
+    const webApi = this._computeApi(amf);
+    const webhooks = this._computeWebhooks(webApi);
+    if (!webhooks || !webhooks.length) {
+      return false;
+    }
+    const id = _operation['@id'];
+    const opKey = this._getAmfKey(this.ns.aml.vocabularies.apiContract.supportedOperation);
+    return webhooks.some((webhook) => {
+      const operations = this._ensureArray(webhook[opKey]);
+      return operations && operations.some((op) => op['@id'] === id);
+    });
   }
 
   set baseUri(value) {
@@ -247,6 +302,11 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
   }
 
   _getPathTemplate() {
+    // Webhooks have no request URL; the event name is rendered by
+    // `getUrlTemplate` instead, so suppress the endpoint path here.
+    if (this.isWebhook) {
+      return '';
+    }
     if (this.isNotHttp && !!this._method) {
       return html`<div class="url-channel-value"><span class="channel-url">Channel</span>${this.path}</div>`;
     }
@@ -255,6 +315,10 @@ export class ApiUrl extends AmfHelperMixin(LitElement) {
 
   getUrlTemplate() {
     const { url, isNotHttp, _method } = this;
+    // Webhooks are not invokable: render the event name instead of a URL/server.
+    if (this.isWebhook) {
+      return html`<div class="url-server-value"><span class="server-url">Event</span>${this.webhookEventName}</div>`
+    }
     if (isNotHttp && !!_method) {
       return html`<div class="url-server-value"><span class="server-url">Server</span>${url}</div>`
     }
