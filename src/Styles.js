@@ -135,6 +135,14 @@ export default css`
   margin-top: 8px;
 }
 
+/* Webhooks render only the event name in .url-value (no preceding "Channel"
+   line), so the 8px top margin above just pushes it out of line with the
+   method pill. Zero it when .url-server-value is the sole child; the isNotHttp
+   case keeps the margin because .url-channel-value precedes it. */
+.url-value > .url-server-value:first-child {
+  margin-top: 0;
+}
+
 .method-value {
   align-self: baseline;
   text-transform: uppercase;
