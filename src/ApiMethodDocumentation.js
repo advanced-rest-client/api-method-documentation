@@ -359,7 +359,7 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
   }
 
   get message() {
-    return this._getMessageForMethod(this.methodName);
+    return this._getMessageForMethod(this._computeOperationMethod(this.method));
   }
 
   constructor() {
@@ -1462,6 +1462,12 @@ export class ApiMethodDocumentation extends AmfHelperMixin(LitElement) {
         return this.returns;
       case 'publish':
         return this._computeAllExpects(this.method);
+      case 'send':
+      case 'receive': {
+        // AsyncAPI 3.0/3.1: operationMessages (→ endpoint channelMessages) — a Message[].
+        const endpoint = Array.isArray(this.endpoint) ? this.endpoint[0] : this.endpoint;
+        return this._computeOperationMessages(this.method, endpoint);
+      }
       default:
         return undefined;
     }
